@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://claude-code-playbook.vercel.app/sitemap.xml
