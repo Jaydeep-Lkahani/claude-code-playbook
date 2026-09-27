@@ -1,13 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
 <meta charset="utf-8">
-<title>Claude Code Playbook</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Claude Code Playbook: A Practical Study Guide in 17 Lessons</title>
+<meta name="description" content="A free, practical study guide to Claude Code: 17 short lessons on sessions, context, CLAUDE.md, plan mode, subagents, MCP, hooks, plugins and token savings, plus cheat sheets.">
+<link rel="canonical" href="https://claude-code-playbook.vercel.app/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="author" content="Claude Code Playbook">
+<meta name="theme-color" content="#FAF9F5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1F1E1D" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Claude Code Playbook">
+<meta property="og:title" content="Claude Code Playbook: learn Claude Code one lesson at a time">
+<meta property="og:description" content="A free, practical study guide to Claude Code: 17 short lessons on sessions, context, CLAUDE.md, plan mode, subagents, MCP, hooks, plugins and token savings, plus cheat sheets.">
+<meta property="og:url" content="https://claude-code-playbook.vercel.app/">
+<meta property="og:image" content="https://claude-code-playbook.vercel.app/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Claude Code Playbook: 17 lessons from your first session to subagents, hooks and token savings.">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Claude Code Playbook: learn Claude Code one lesson at a time">
+<meta name="twitter:description" content="A free, practical study guide to Claude Code: 17 short lessons on sessions, context, CLAUDE.md, plan mode, subagents, MCP, hooks, plugins and token savings, plus cheat sheets.">
+<meta name="twitter:image" content="https://claude-code-playbook.vercel.app/og-image.png">
+<meta name="twitter:image:alt" content="Claude Code Playbook: 17 lessons from your first session to subagents, hooks and token savings.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://claude-code-playbook.vercel.app/#website",
+      "url": "https://claude-code-playbook.vercel.app/",
+      "name": "Claude Code Playbook",
+      "description": "A free, practical study guide to Claude Code: 17 short lessons on sessions, context, CLAUDE.md, plan mode, subagents, MCP, hooks, plugins and token savings, plus cheat sheets.",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "LearningResource",
+      "@id": "https://claude-code-playbook.vercel.app/#guide",
+      "name": "Claude Code Playbook",
+      "url": "https://claude-code-playbook.vercel.app/",
+      "description": "A free, practical study guide to Claude Code: 17 short lessons on sessions, context, CLAUDE.md, plan mode, subagents, MCP, hooks, plugins and token savings, plus cheat sheets.",
+      "learningResourceType": "Study guide",
+      "educationalLevel": "Beginner to intermediate",
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "timeRequired": "PT2H",
+      "image": "https://claude-code-playbook.vercel.app/og-image.png",
+      "about": ["Claude Code", "Agentic coding", "AI-assisted software development"],
+      "isPartOf": { "@id": "https://claude-code-playbook.vercel.app/#website" }
+    }
+  ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 :root{
-  --bg:#FAF9F5; --surface:#FFFFFF; --surface-2:#F2F0E8; --surface-3:#ECE9DF; --ink:#1A1918; --ink-2:#3F3E3A; --muted:#75736B; --line:#E7E4D9; --line-2:#DAD6C9;
-  --accent:#C4613E; --accent-bright:#D97757; --accent-ink:#FFFFFF; --accent-soft:#F7E9E1;
-  --amber:#96610F; --amber-soft:#FBF1DE; --good:#3E7A4E; --good-soft:#E6F1E4; --bad:#B23E32; --bad-soft:#FBE9E5; --info:#3D6E9F; --info-soft:#E6EEF6;
+  --bg:#FAF9F5; --surface:#FFFFFF; --surface-2:#F2F0E8; --surface-3:#ECE9DF; --ink:#1A1918; --ink-2:#3F3E3A; --muted:#6C6A63; --line:#E7E4D9; --line-2:#DAD6C9;
+  --accent:#B45837; --accent-bright:#D97757; --accent-ink:#FFFFFF; --accent-soft:#F7E9E1; --accent-deep:#A75133; --em:#D87352; --mixk:60%; --tok-o:1;
+  --amber:#96610F; --amber-soft:#FBF1DE; --good:#3D784D; --good-soft:#E6F1E4; --bad:#B23E32; --bad-soft:#FBE9E5; --info:#3D6E9F; --info-soft:#E6EEF6;
   --code-bg:#1F1E1D; --code-ink:#ECEAE2; --code-muted:#9A978D; --code-accent:#EBA285; --code-line:#33322F;
   --p1:#D97757; --p2:#5E8FC2; --p3:#6F8A4E; --p4:#8B7FB8; --p5:#C9983E; --p6:#3F9A8A; --p7:#B8667A;
   --s1:#A9A596; --s2:#6E6A5E; --s3:#C9983E; --s4:#6F8A4E; --s5:#D97757; --s6:#DAD6C9;
@@ -21,7 +81,7 @@
   :root:not([data-theme="light"]){
     color-scheme:dark;
     --bg:#1F1E1D; --surface:#262624; --surface-2:#2D2C2A; --surface-3:#343331; --ink:#F4F2EB; --ink-2:#D5D2C8; --muted:#A09D93; --line:#383734; --line-2:#45433F;
-    --accent:#E58D6C; --accent-bright:#E58D6C; --accent-ink:#1F1E1D; --accent-soft:#3A2A23;
+    --accent:#E58D6C; --accent-bright:#E58D6C; --accent-ink:#1F1E1D; --accent-soft:#3A2A23; --accent-deep:#E58D6C; --em:#E58D6C; --mixk:72%; --tok-o:.85;
     --amber:#E8B45E; --amber-soft:#342A1A; --good:#8CC38F; --good-soft:#223024; --bad:#F09184; --bad-soft:#3A2220; --info:#8DB5DE; --info-soft:#1F2B38;
     --code-bg:#171716; --code-line:#2E2D2B;
     --p1:#E58D6C; --p2:#7FA8D6; --p3:#98B274; --p4:#A99ED3; --p5:#DDB05C; --p6:#5DB8A7; --p7:#D48A9C;
@@ -32,7 +92,7 @@
 :root[data-theme="dark"]{
   color-scheme:dark;
   --bg:#1F1E1D; --surface:#262624; --surface-2:#2D2C2A; --surface-3:#343331; --ink:#F4F2EB; --ink-2:#D5D2C8; --muted:#A09D93; --line:#383734; --line-2:#45433F;
-  --accent:#E58D6C; --accent-bright:#E58D6C; --accent-ink:#1F1E1D; --accent-soft:#3A2A23;
+  --accent:#E58D6C; --accent-bright:#E58D6C; --accent-ink:#1F1E1D; --accent-soft:#3A2A23; --accent-deep:#E58D6C; --em:#E58D6C; --mixk:72%; --tok-o:.85;
   --amber:#E8B45E; --amber-soft:#342A1A; --good:#8CC38F; --good-soft:#223024; --bad:#F09184; --bad-soft:#3A2220; --info:#8DB5DE; --info-soft:#1F2B38;
   --code-bg:#171716; --code-line:#2E2D2B;
   --p1:#E58D6C; --p2:#7FA8D6; --p3:#98B274; --p4:#A99ED3; --p5:#DDB05C; --p6:#5DB8A7; --p7:#D48A9C;
@@ -52,13 +112,16 @@ td code{white-space:nowrap}
 kbd{font-family:var(--mono);font-size:.76em;background:var(--surface);border:1px solid var(--line-2);border-bottom-width:2px;padding:.12em .5em;border-radius:6px;color:var(--ink-2);white-space:nowrap}
 h1,h2,h3,h4{font-family:var(--display);line-height:1.2;text-wrap:balance;margin:0;font-weight:600;letter-spacing:-.005em}
 p{margin:0}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.skip-link{position:absolute;left:12px;top:-100px;z-index:100;padding:10px 16px;border-radius:10px;background:var(--surface);color:var(--ink);border:1px solid var(--line-2);box-shadow:var(--shadow);font-weight:600;text-decoration:none}
+.skip-link:focus{top:12px}
 
 /* ---------- top bar ---------- */
 .topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;height:var(--top-h);display:flex;align-items:center;gap:14px;padding-inline:20px;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
 .brand{display:flex;align-items:center;gap:11px;font-family:var(--display);font-weight:600;font-size:19px;color:var(--ink);text-decoration:none;white-space:nowrap}
 .brand .glyph{display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:var(--accent-bright);color:#fff}
 .brand .glyph svg{width:18px;height:18px}
-.search-btn{flex:1;max-width:440px;margin-inline:auto;height:40px;display:flex;align-items:center;gap:10px;padding:0 8px 0 14px;border-radius:11px;border:1px solid var(--line);background:var(--surface);color:var(--muted);font:inherit;font-size:14.5px;cursor:pointer;text-align:left;transition:border-color .15s,box-shadow .15s}
+.search-btn{flex:1;min-width:0;max-width:440px;margin-inline:auto;height:40px;display:flex;align-items:center;gap:10px;padding:0 8px 0 14px;border-radius:11px;border:1px solid var(--line);background:var(--surface);color:var(--muted);font:inherit;font-size:14.5px;cursor:pointer;text-align:left;transition:border-color .15s,box-shadow .15s}
 .search-btn:hover{border-color:var(--line-2);box-shadow:var(--shadow)}
 .search-btn svg{width:17px;height:17px;flex:none}
 .search-btn span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -119,7 +182,7 @@ main{padding:0 clamp(16px,5vw,72px) 96px;min-width:0}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);font-weight:700}
 .eyebrow .spark{width:16px;height:16px;color:var(--accent-bright)}
 .hero h1{font-size:clamp(36px,4.8vw,56px);font-weight:600;letter-spacing:-.02em;margin-top:16px;line-height:1.08}
-.hero h1 em{font-style:italic;color:var(--accent-bright)}
+.hero h1 em{font-style:italic;color:var(--em)}
 .hero .lede{font-size:19px;color:var(--ink-2);margin-top:20px;max-width:560px;line-height:1.65}
 .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
 .btn{display:inline-flex;align-items:center;gap:8px;height:46px;padding:0 20px;border-radius:12px;font-weight:600;text-decoration:none;font-size:15.5px;border:1px solid var(--line-2);color:var(--ink);background:var(--surface);cursor:pointer;font-family:inherit;transition:transform .15s ease,box-shadow .15s}
@@ -146,7 +209,7 @@ main{padding:0 clamp(16px,5vw,72px) 96px;min-width:0}
 .streak{margin-top:14px;font-size:14px;color:var(--ink-2)}
 .streak b{color:var(--accent)}
 .upnext{display:block;margin-top:18px;padding:14px 16px;border-radius:14px;background:var(--accent-soft);text-decoration:none;color:var(--ink)}
-.upnext span{display:block;font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.upnext span{display:block;font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--accent-deep);font-weight:700}
 .upnext b{display:block;font-family:var(--display);font-size:18px;font-weight:600;margin-top:3px}
 .upnext em{font-style:normal;font-size:13px;color:var(--muted)}
 
@@ -169,7 +232,7 @@ main{padding:0 clamp(16px,5vw,72px) 96px;min-width:0}
 
 /* ---------- parts and lessons ---------- */
 .part{padding-top:72px;margin-top:56px;border-top:1px solid var(--line)}
-.part-label{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:color-mix(in srgb,var(--pc) 72%,var(--ink));background:color-mix(in srgb,var(--pc) 14%,transparent);padding:5px 12px;border-radius:99px}
+.part-label{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:color-mix(in srgb,var(--pc) var(--mixk),var(--ink));background:color-mix(in srgb,var(--pc) 14%,transparent);padding:5px 12px;border-radius:99px}
 .part > h2.part-title{font-size:clamp(32px,3.8vw,44px);font-weight:600;margin-top:18px;letter-spacing:-.015em}
 .part > .part-intro{font-size:19px;color:var(--ink-2);margin-top:14px;max-width:640px;line-height:1.65}
 #part1{--pc:var(--p1)} #part2{--pc:var(--p2)} #part3{--pc:var(--p3)} #part4{--pc:var(--p4)} #part5{--pc:var(--p5)} #part6{--pc:var(--p6)} #part7{--pc:var(--p7)}
@@ -183,7 +246,7 @@ section.topic{margin-top:88px}
 .topic > .kicker .st{display:inline-flex;align-items:center;gap:6px;font-weight:600;color:var(--good)}
 .topic > .kicker .st[hidden]{display:none}
 .topic > h2{font-size:clamp(28px,3vw,36px);font-weight:600;margin-top:14px;letter-spacing:-.01em}
-section[id^="cs-"] > .kicker{font-family:var(--mono);font-size:12.5px;font-weight:600;color:color-mix(in srgb,var(--pc,var(--accent)) 72%,var(--ink))}
+section[id^="cs-"] > .kicker{font-family:var(--mono);font-size:12.5px;font-weight:600;color:color-mix(in srgb,var(--pc,var(--accent)) var(--mixk),var(--ink))}
 .topic h3{font-size:23px;font-weight:600;margin-top:52px}
 .topic h4{font-size:18px;font-weight:700;margin-top:36px;font-family:var(--body);color:var(--ink)}
 .prose{display:grid;gap:18px;margin-top:18px}
@@ -196,7 +259,7 @@ section[id^="cs-"] > .kicker{font-family:var(--mono);font-size:12.5px;font-weigh
 .www{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin-top:24px;border-radius:16px;background:var(--surface);border:1px solid var(--line);overflow:hidden}
 .www div{padding:18px 20px}
 .www div + div{border-left:1px solid var(--line)}
-.www dt{display:flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:color-mix(in srgb,var(--pc,var(--accent)) 72%,var(--ink))}
+.www dt{display:flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:color-mix(in srgb,var(--pc,var(--accent)) var(--mixk),var(--ink))}
 .www dt::before{content:"";width:7px;height:7px;border-radius:2px;background:var(--pc,var(--accent-bright))}
 .www dd{margin:8px 0 0;font-size:15.5px;line-height:1.6;color:var(--ink-2)}
 
@@ -221,7 +284,7 @@ section[id^="cs-"] > .kicker{font-family:var(--mono);font-size:12.5px;font-weigh
 .vcard .vh{display:flex;flex-direction:column;justify-content:flex-start;gap:4px;padding:14px 16px;font-weight:700;font-size:13px;min-width:132px;border-right:1px solid var(--line)}
 .vcard.bad .vh{background:var(--bad-soft);color:var(--bad)}
 .vcard.good .vh{background:var(--good-soft);color:var(--good)}
-.vcard .vh .tok{font-family:var(--mono);font-size:11.5px;font-weight:600;opacity:.85}
+.vcard .vh .tok{font-family:var(--mono);font-size:11.5px;font-weight:600;opacity:var(--tok-o)}
 .vcard pre{margin:0;padding:14px 16px;font-family:var(--mono);font-size:13px;line-height:1.7;white-space:pre-wrap;word-break:break-word;color:var(--ink)}
 .vcard .vf{padding:10px;display:flex;align-items:flex-start}
 .vcard .copy{color:var(--ink-2);border-color:var(--line)}
@@ -261,7 +324,7 @@ td b{font-weight:600}
 .pipeline .step span{display:block;font-size:13px;color:var(--muted);margin-top:4px;line-height:1.45}
 .pipeline .step code{font-size:11.5px}
 .pipeline .step.you{background:var(--accent-soft);border-color:transparent}
-.pipeline .step.you .sn{color:var(--accent);font-weight:600}
+.pipeline .step.you .sn{color:var(--accent-deep);font-weight:600}
 
 .tree{font-family:var(--mono);font-size:13px;line-height:1.85;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-top:22px;overflow-x:auto;white-space:pre;color:var(--ink-2)}
 .tree .d{color:var(--ink);font-weight:600}
@@ -309,7 +372,7 @@ td b{font-weight:600}
 .sheet.bad li::before{background:var(--bad)}
 .promptlist{display:grid;gap:12px;margin-top:22px}
 .pitem{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 14px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 14px 14px 18px}
-.pitem .pl{font-size:12px;font-weight:700;color:color-mix(in srgb,var(--pc,var(--accent)) 72%,var(--ink));letter-spacing:.06em;text-transform:uppercase}
+.pitem .pl{font-size:12px;font-weight:700;color:color-mix(in srgb,var(--pc,var(--accent)) var(--mixk),var(--ink));letter-spacing:.06em;text-transform:uppercase}
 .pitem .pt{grid-column:1;font-family:var(--mono);font-size:13.5px;line-height:1.65;color:var(--ink);white-space:pre-wrap;word-break:break-word}
 .pitem .copy{grid-column:2;grid-row:1 / span 2;color:var(--ink-2);border-color:var(--line)}
 .pitem .copy:hover{background:var(--surface-2)}
@@ -328,7 +391,7 @@ td b{font-weight:600}
 /* lesson footer */
 .lfoot{margin-top:48px;display:grid;gap:14px}
 .takeaways{border-radius:16px;padding:20px 22px;background:color-mix(in srgb,var(--pc,var(--accent-bright)) 9%,var(--surface));border:1px solid color-mix(in srgb,var(--pc,var(--accent-bright)) 22%,var(--line))}
-.takeaways .t{display:flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:color-mix(in srgb,var(--pc,var(--accent)) 72%,var(--ink))}
+.takeaways .t{display:flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:color-mix(in srgb,var(--pc,var(--accent)) var(--mixk),var(--ink))}
 .takeaways .t svg{width:16px;height:16px}
 .takeaways ol{margin:12px 0 0;padding-left:1.3em;display:grid;gap:8px;color:var(--ink);font-size:16px}
 .takeaways li::marker{font-family:var(--mono);font-size:13px;color:var(--muted)}
@@ -356,6 +419,7 @@ td b{font-weight:600}
 .sync-note.on i{background:var(--good)}
 
 footer{border-top:1px solid var(--line);margin-top:80px;padding-top:28px;font-size:14px;color:var(--muted);max-width:740px}
+footer .legal{margin-top:12px}
 
 @media (max-width: 1080px){
   .hero{grid-template-columns:1fr;padding-top:44px;gap:32px}
@@ -385,25 +449,28 @@ footer{border-top:1px solid var(--line);margin-top:80px;padding-top:28px;font-si
   section.topic{margin-top:64px}
 }
 </style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
 
 <header class="topbar">
-  <button class="iconbtn menu-btn" id="menuBtn" aria-label="Open lesson list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-  <a class="brand" href="#start"><span class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 5 4-5 4"/><path d="M13 17h6"/></svg></span><span class="full">Claude Code Playbook</span></a>
+  <button class="iconbtn menu-btn" id="menuBtn" type="button" aria-label="Open lesson list" aria-controls="nav" aria-expanded="false"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <a class="brand" href="#start"><span class="glyph"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 5 4-5 4"/><path d="M13 17h6"/></svg></span><span class="full">Claude Code Playbook</span></a>
   <button class="search-btn" id="searchBtn" type="button" aria-label="Search the playbook">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
     <span>Search lessons, commands, prompts</span>
     <kbd id="searchKbd">Ctrl K</kbd>
   </button>
   <div class="top-right">
     <a class="prog-pill" href="#start" title="Your progress"><span id="pillText">0 / 17</span><span class="mini"><i id="pillBar"></i></span></a>
-    <button class="iconbtn" id="themeBtn" type="button" aria-label="Switch light or dark theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+    <button class="iconbtn" id="themeBtn" type="button" aria-label="Switch light or dark theme"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
   </div>
 </header>
 
 <div class="palette" id="palette" hidden>
   <div class="palette-box" role="dialog" aria-modal="true" aria-label="Search the playbook">
     <div class="pinput">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input id="q" type="text" placeholder="Search lessons, commands, prompts…" autocomplete="off" spellcheck="false" aria-label="Search">
       <kbd>Esc</kbd>
     </div>
@@ -421,29 +488,29 @@ footer{border-top:1px solid var(--line);margin-top:80px;padding-top:28px;font-si
   </div>
   <a href="#start" data-nav="start"><span class="ck" style="border-style:dashed"></span>Dashboard</a>
   <h5 style="--pc:var(--p1)"><span class="dot"></span>Part 1 · Foundations</h5>
-  <a href="#agentic" data-l="agentic"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>01 · Agentic vs vibe coding</a>
-  <a href="#setup" data-l="setup"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>02 · Setup and first session</a>
-  <a href="#how-it-works" data-l="how-it-works"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>03 · How Claude Code works</a>
-  <a href="#sessions" data-l="sessions"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>04 · Sessions and commands</a>
-  <a href="#prompting" data-l="prompting"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>05 · Prompting and code changes</a>
+  <a href="#agentic" data-l="agentic"><span class="ck"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>01 · Agentic vs vibe coding</a>
+  <a href="#setup" data-l="setup"><span class="ck"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>02 · Setup and first session</a>
+  <a href="#how-it-works" data-l="how-it-works"><span class="ck"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>03 · How Claude Code works</a>
+  <a href="#sessions" data-l="sessions"><span class="ck"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>04 · Sessions and commands</a>
+  <a href="#prompting" data-l="prompting"><span class="ck"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>05 · Prompting and code changes</a>
   <h5 style="--pc:var(--p2)"><span class="dot"></span>Part 2 · Context and memory</h5>
-  <a href="#context" data-l="context"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>06 · The context window</a>
-  <a href="#claude-md" data-l="claude-md"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>07 · CLAUDE.md and memory</a>
+  <a href="#context" data-l="context"><span class="ck"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>06 · The context window</a>
+  <a href="#claude-md" data-l="claude-md"><span class="ck"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>07 · CLAUDE.md and memory</a>
   <h5 style="--pc:var(--p3)"><span class="dot"></span>Part 3 · The workflow</h5>
-  <a href="#spec" data-l="spec"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>08 · Spec-driven development</a>
-  <a href="#plan-mode" data-l="plan-mode"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>09 · Plan mode and thinking</a>
-  <a href="#commands-skills" data-l="commands-skills"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>10 · Commands and skills</a>
-  <a href="#subagents" data-l="subagents"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>11 · Subagents</a>
+  <a href="#spec" data-l="spec"><span class="ck"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>08 · Spec-driven development</a>
+  <a href="#plan-mode" data-l="plan-mode"><span class="ck"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>09 · Plan mode and thinking</a>
+  <a href="#commands-skills" data-l="commands-skills"><span class="ck"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>10 · Commands and skills</a>
+  <a href="#subagents" data-l="subagents"><span class="ck"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>11 · Subagents</a>
   <h5 style="--pc:var(--p4)"><span class="dot"></span>Part 4 · Extending</h5>
-  <a href="#mcp" data-l="mcp"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>12 · MCP servers</a>
-  <a href="#hooks" data-l="hooks"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>13 · Hooks</a>
-  <a href="#plugins" data-l="plugins"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>14 · Plugins</a>
+  <a href="#mcp" data-l="mcp"><span class="ck"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>12 · MCP servers</a>
+  <a href="#hooks" data-l="hooks"><span class="ck"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>13 · Hooks</a>
+  <a href="#plugins" data-l="plugins"><span class="ck"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>14 · Plugins</a>
   <h5 style="--pc:var(--p5)"><span class="dot"></span>Part 5 · Tokens and cost</h5>
-  <a href="#tokens" data-l="tokens"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>15 · Token optimization</a>
+  <a href="#tokens" data-l="tokens"><span class="ck"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>15 · Token optimization</a>
   <h5 style="--pc:var(--p6)"><span class="dot"></span>Part 6 · Real projects</h5>
-  <a href="#workflows" data-l="workflows"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>16 · Real-world workflows</a>
+  <a href="#workflows" data-l="workflows"><span class="ck"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>16 · Real-world workflows</a>
   <h5 style="--pc:var(--p7)"><span class="dot"></span>Part 7 · Cheat sheets</h5>
-  <a href="#cheatsheets" data-l="cheatsheets"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>17 · All cheat sheets</a>
+  <a href="#cheatsheets" data-l="cheatsheets"><span class="ck"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>17 · All cheat sheets</a>
   <div class="sub">
     <a href="#cs-commands">Commands</a>
     <a href="#cs-keys">Keyboard shortcuts</a>
@@ -465,11 +532,11 @@ footer{border-top:1px solid var(--line);margin-top:80px;padding-top:28px;font-si
 <section id="start" data-title="Dashboard">
   <div class="hero">
     <div>
-      <div class="eyebrow"><svg class="spark" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.9 6.1L20 10l-6.1 1.9L12 18l-1.9-6.1L4 10l6.1-1.9z"/></svg><span id="greet">Your Claude Code study guide</span></div>
+      <div class="eyebrow"><svg aria-hidden="true" focusable="false" class="spark" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.9 6.1L20 10l-6.1 1.9L12 18l-1.9-6.1L4 10l6.1-1.9z"/></svg><span id="greet">Your Claude Code study guide</span></div>
       <h1>Learn to build real software with Claude Code, <em>one lesson at a time.</em></h1>
       <p class="lede" id="ledeText">17 short lessons, from your first session to subagents, hooks and token savings. Each one ends with a quick recap, so you can study in 10-minute sittings and pick up exactly where you stopped.</p>
       <div class="ctas">
-        <a class="btn primary" id="continueBtn" href="#agentic">Start lesson 01 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="btn primary" id="continueBtn" href="#agentic">Start lesson 01 <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         <a class="btn" href="#tokens">Save tokens</a>
         <a class="btn" href="#cheatsheets">Cheat sheets</a>
       </div>
@@ -477,7 +544,7 @@ footer{border-top:1px solid var(--line);margin-top:80px;padding-top:28px;font-si
     <aside class="pcard" aria-label="Your progress">
       <div class="top">
         <div class="ring">
-          <svg viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="52" fill="none" stroke-width="11"/><circle class="fill" id="ringFill" cx="60" cy="60" r="52" fill="none" stroke-width="11" stroke-linecap="round" stroke-dasharray="326.73" stroke-dashoffset="326.73"/></svg>
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="52" fill="none" stroke-width="11"/><circle class="fill" id="ringFill" cx="60" cy="60" r="52" fill="none" stroke-width="11" stroke-linecap="round" stroke-dasharray="326.73" stroke-dashoffset="326.73"/></svg>
           <div class="lbl"><div><b id="ringPct">0%</b><span>complete</span></div></div>
         </div>
         <div class="stat"><b id="statDone">0 of 17 lessons</b><span id="statLeft">About 2 hours of reading in total</span></div>
@@ -490,7 +557,7 @@ footer{border-top:1px solid var(--line);margin-top:80px;padding-top:28px;font-si
   </div>
 
   <div class="tipday">
-    <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg></div>
+    <div class="ic"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg></div>
     <div><small>Tip of the day</small><p id="tipText">Start every feature in a fresh, named session. It keeps context clean and cuts your token use sharply.</p></div>
     <button type="button" id="tipNext">Another tip</button>
   </div>
@@ -531,7 +598,7 @@ footer{border-top:1px solid var(--line);margin-top:80px;padding-top:28px;font-si
       <p><strong>Agentic coding</strong> flips the control. You decide the important things up front (usually in a written spec), and the agent executes. It reads the codebase, plans, edits files, runs commands and tests, and reports back. You review at checkpoints. It is slower to start, but the output is consistent, traceable, and fits production code.</p>
     </div>
     <div class="tablewrap"><table>
-      <thead><tr><th></th><th>Vibe coding</th><th>Agentic / spec-driven</th></tr></thead>
+      <thead><tr><th><span class="sr-only">Aspect</span></th><th>Vibe coding</th><th>Agentic / spec-driven</th></tr></thead>
       <tbody>
         <tr><td><b>Starting point</b></td><td>A rough idea in one prompt</td><td>A written spec with clear requirements</td></tr>
         <tr><td><b>Who decides</b></td><td>The AI guesses</td><td>You decide, the AI implements</td></tr>
@@ -793,7 +860,7 @@ Requirements:
     </div>
 
     <div class="widget" id="ctxWidget">
-      <h4>Where your 200K tokens go</h4>
+      <h4 aria-level="3">Where your 200K tokens go</h4>
       <p class="sub">Approximate numbers from a real <code>/context</code> readout at the start of a session. Drag the slider to add conversation.</p>
       <div class="ctxbar" id="ctxBar" role="img" aria-label="Context window usage bar"></div>
       <div class="legend" id="ctxLegend"></div>
@@ -1595,7 +1662,7 @@ Don't include exploration or anything we abandoned.</pre></div>
     </div>
 
     <details class="wf" open>
-      <summary><b>Starting a new project</b><span>Set up structure, CLAUDE.md, guardrails and Git before writing features.</span><i>+</i></summary>
+      <summary><b>Starting a new project</b><span>Set up structure, CLAUDE.md, guardrails and Git before writing features.</span><i aria-hidden="true">+</i></summary>
       <div class="wfb">
         <div class="prose"><ol>
           <li>Decide the stack yourself. Write a one-page overview: what the app does, users, core features, stack.</li>
@@ -1612,7 +1679,7 @@ Propose a folder structure, the minimal set of files for a running "GET /health"
     </details>
 
     <details class="wf">
-      <summary><b>Understanding an existing codebase</b><span>Get a map of a repo you didn't write, without flooding your context.</span><i>+</i></summary>
+      <summary><b>Understanding an existing codebase</b><span>Get a map of a repo you didn't write, without flooding your context.</span><i aria-hidden="true">+</i></summary>
       <div class="wfb">
         <div class="prose"><ol>
           <li>Ask the three orientation questions (what, stack, structure).</li>
@@ -1627,7 +1694,7 @@ Propose a folder structure, the minimal set of files for a running "GET /health"
     </details>
 
     <details class="wf">
-      <summary><b>Adding a new feature</b><span>The full spec → plan → build → test → review → ship loop.</span><i>+</i></summary>
+      <summary><b>Adding a new feature</b><span>The full spec → plan → build → test → review → ship loop.</span><i aria-hidden="true">+</i></summary>
       <div class="wfb">
         <div class="prose"><ol>
           <li>New session, named after the feature. Branch from fresh main.</li>
@@ -1644,7 +1711,7 @@ Users can filter the profile page (summary stats, transactions table, category b
     </details>
 
     <details class="wf">
-      <summary><b>Fixing bugs</b><span>Reproduce, prove it with a failing test, then fix.</span><i>+</i></summary>
+      <summary><b>Fixing bugs</b><span>Reproduce, prove it with a failing test, then fix.</span><i aria-hidden="true">+</i></summary>
       <div class="wfb">
         <div class="prose"><ol>
           <li>Give the exact symptom, the expected behavior, and where it happens.</li>
@@ -1661,7 +1728,7 @@ Relevant code: @app.py (edit_expense route) and @database/db.py (get_monthly_sum
     </details>
 
     <details class="wf">
-      <summary><b>Debugging a hard or intermittent issue</b><span>Hypotheses and evidence, not random edits.</span><i>+</i></summary>
+      <summary><b>Debugging a hard or intermittent issue</b><span>Hypotheses and evidence, not random edits.</span><i aria-hidden="true">+</i></summary>
       <div class="wfb">
         <div class="prose"><ol>
           <li>Paste the precise error and stack trace, plus what changed recently.</li>
@@ -1677,7 +1744,7 @@ Don't change code yet. Give me your top 3 hypotheses ranked by likelihood, the e
     </details>
 
     <details class="wf">
-      <summary><b>Refactoring</b><span>Change structure without changing behavior, with tests as the safety net.</span><i>+</i></summary>
+      <summary><b>Refactoring</b><span>Change structure without changing behavior, with tests as the safety net.</span><i aria-hidden="true">+</i></summary>
       <div class="wfb">
         <div class="prose"><ol>
           <li>Make sure tests cover the current behavior. Add characterization tests if not.</li>
@@ -1692,7 +1759,7 @@ First list what's untested today and which characterization tests we need. Then 
     </details>
 
     <details class="wf">
-      <summary><b>Writing tests</b><span>Test the spec, not the implementation.</span><i>+</i></summary>
+      <summary><b>Writing tests</b><span>Test the spec, not the implementation.</span><i aria-hidden="true">+</i></summary>
       <div class="wfb">
         <div class="code wrap" data-lang="prompt"><pre>Write pytest tests for @.claude/specs/02-registration.md based on the spec's requirements and acceptance criteria, not on the current code (the code may be wrong).
 Cover: happy path, validation errors, duplicate email, password hashing, redirect targets, and logged-in users being redirected away.
@@ -1703,7 +1770,7 @@ Use the fixtures in @tests/conftest.py. Put them in tests/test_registration.py. 
     </details>
 
     <details class="wf">
-      <summary><b>Code review</b><span>Fresh eyes: a different agent than the one that wrote the code.</span><i>+</i></summary>
+      <summary><b>Code review</b><span>Fresh eyes: a different agent than the one that wrote the code.</span><i aria-hidden="true">+</i></summary>
       <div class="wfb">
         <div class="code wrap" data-lang="prompt"><pre>Review the changes on this branch (git diff main...HEAD) as a strict senior reviewer. Check correctness, edge cases, security (injection, authz, secrets), performance (N+1 queries, unbounded loops), and readability. Output a table: severity · file:line · issue · suggested fix. Don't edit anything.</pre></div>
         <div class="code wrap" data-lang="prompt"><pre>/review-feature 07-add-expense</pre></div>
@@ -1712,7 +1779,7 @@ Use the fixtures in @tests/conftest.py. Put them in tests/test_registration.py. 
     </details>
 
     <details class="wf">
-      <summary><b>Working with third-party APIs</b><span>Current docs first, then a thin, tested client.</span><i>+</i></summary>
+      <summary><b>Working with third-party APIs</b><span>Current docs first, then a thin, tested client.</span><i aria-hidden="true">+</i></summary>
       <div class="wfb">
         <div class="code wrap" data-lang="prompt"><pre>We need to send transactional emails via Resend. Use context7 (or fetch the official docs) for the current Python SDK. Then:
 - create a thin client in services/email.py with send_receipt(user, expense)
@@ -1725,7 +1792,7 @@ Don't touch any route yet.</pre></div>
     </details>
 
     <details class="wf">
-      <summary><b>Database tasks</b><span>Schema changes, migrations and queries, carefully.</span><i>+</i></summary>
+      <summary><b>Database tasks</b><span>Schema changes, migrations and queries, carefully.</span><i aria-hidden="true">+</i></summary>
       <div class="wfb">
         <div class="code wrap" data-lang="prompt · plan mode"><pre>We need to store amounts as integer paise instead of REAL rupees in the expenses table (about 2M rows in production).
 Plan a zero-downtime migration with Alembic: add column, backfill in batches, dual-write, switch reads, drop old column. Include the rollback for each step and how to verify data integrity. No code yet.</pre></div>
@@ -1738,7 +1805,7 @@ Explain why it's slow and propose an index or query change. Show the before/afte
     </details>
 
     <details class="wf">
-      <summary><b>Documentation</b><span>Docs written from the code, for a specific reader.</span><i>+</i></summary>
+      <summary><b>Documentation</b><span>Docs written from the code, for a specific reader.</span><i aria-hidden="true">+</i></summary>
       <div class="wfb">
         <div class="code wrap" data-lang="prompt"><pre>Write README.md for a new developer joining the team: what the app does, local setup (exact commands), environment variables (from .env.example, never real values), how to run tests, project structure, and how we ship features (link .claude/specs/). Keep it under 150 lines.</pre></div>
         <div class="code wrap" data-lang="prompt"><pre>Add docstrings to every public function in @database/db.py: one-line summary, args, returns, raises. Don't change any logic.</pre></div>
@@ -1747,7 +1814,7 @@ Explain why it's slow and propose an index or query change. Show the before/afte
     </details>
 
     <details class="wf">
-      <summary><b>Git workflows</b><span>Branches, commits and PRs handled consistently.</span><i>+</i></summary>
+      <summary><b>Git workflows</b><span>Branches, commits and PRs handled consistently.</span><i aria-hidden="true">+</i></summary>
       <div class="wfb">
         <div class="code wrap" data-lang="prompt"><pre>Look at the staged changes and write a conventional commit message (type(scope): summary, then a short body explaining why). Commit it.</pre></div>
         <div class="code wrap" data-lang="markdown · .claude/commands/ship-feature.md"><pre>---
@@ -1767,7 +1834,7 @@ disable-model-invocation: true
     </details>
 
     <details class="wf">
-      <summary><b>Large feature implementation</b><span>Break it down, parallelize independent parts, keep sessions small.</span><i>+</i></summary>
+      <summary><b>Large feature implementation</b><span>Break it down, parallelize independent parts, keep sessions small.</span><i aria-hidden="true">+</i></summary>
       <div class="wfb">
         <div class="prose"><ol>
           <li>Spec for the whole feature. Plan with Opus into independent tasks.</li>
@@ -1781,7 +1848,7 @@ disable-model-invocation: true
     </details>
 
     <details class="wf">
-      <summary><b>Changes across many files</b><span>Cross-cutting edits done systematically, not one file at a time.</span><i>+</i></summary>
+      <summary><b>Changes across many files</b><span>Cross-cutting edits done systematically, not one file at a time.</span><i aria-hidden="true">+</i></summary>
       <div class="wfb">
         <div class="code wrap" data-lang="prompt"><pre>We're replacing our custom logger (utils/log.py) with structlog across the backend.
 First, list every file that imports utils/log and the call patterns used (log.info with kwargs, log.exception, etc.).
@@ -1791,7 +1858,7 @@ Then propose the mapping for each pattern. Wait for my approval before editing.<
     </details>
 
     <details class="wf">
-      <summary><b>Planning before coding</b><span>Use Claude as an architect before it's a typist.</span><i>+</i></summary>
+      <summary><b>Planning before coding</b><span>Use Claude as an architect before it's a typist.</span><i aria-hidden="true">+</i></summary>
       <div class="wfb">
         <div class="code wrap" data-lang="prompt · plan mode"><pre>I need to add real-time notifications to the dashboard. Options I'm considering: polling, SSE, WebSockets.
 Given our stack (@CLAUDE.md) and hosting (single Railway instance, may scale to 3), compare the options in a table (complexity, infra, scaling, failure modes) and recommend one. Ask me up to 3 questions if something important is unclear.</pre></div>
@@ -1871,12 +1938,12 @@ Given our stack (@CLAUDE.md) and hosting (single Railway instance, may scale to 
       <div class="kicker">17.4</div>
       <h2 style="font-size:26px;margin-top:8px">Agentic workflow patterns</h2>
       <div class="sheet-grid">
-        <div class="sheet"><h4>Spec → Plan → Build → Verify</h4><ul><li>Spec states what and why</li><li>Plan mode writes the how</li><li>Implement task by task</li><li>Validate against acceptance criteria</li></ul></div>
-        <div class="sheet"><h4>Writer / Reviewer split</h4><ul><li>One agent writes the code</li><li>A different agent reviews it</li><li>Removes the writer's blind spots</li></ul></div>
-        <div class="sheet"><h4>Test writer → Test runner</h4><ul><li>Writer tests the spec, not the code</li><li>Read-only runner executes and reports</li><li>Sequential: runner needs the writer's output</li></ul></div>
-        <div class="sheet"><h4>Parallel fan-out</h4><ul><li>Independent tasks, separate files</li><li>One subagent per task</li><li>Main agent integrates and runs the suite</li></ul></div>
-        <div class="sheet"><h4>Explore → Summarize</h4><ul><li>Subagent reads the heavy stuff</li><li>Returns a short summary with paths</li><li>Main context stays small</li></ul></div>
-        <div class="sheet"><h4>Plan with Opus, build with Sonnet</h4><ul><li>Strongest model for reasoning</li><li>Balanced model for execution</li><li>Haiku for mechanical edits</li></ul></div>
+        <div class="sheet"><h4 aria-level="3">Spec → Plan → Build → Verify</h4><ul><li>Spec states what and why</li><li>Plan mode writes the how</li><li>Implement task by task</li><li>Validate against acceptance criteria</li></ul></div>
+        <div class="sheet"><h4 aria-level="3">Writer / Reviewer split</h4><ul><li>One agent writes the code</li><li>A different agent reviews it</li><li>Removes the writer's blind spots</li></ul></div>
+        <div class="sheet"><h4 aria-level="3">Test writer → Test runner</h4><ul><li>Writer tests the spec, not the code</li><li>Read-only runner executes and reports</li><li>Sequential: runner needs the writer's output</li></ul></div>
+        <div class="sheet"><h4 aria-level="3">Parallel fan-out</h4><ul><li>Independent tasks, separate files</li><li>One subagent per task</li><li>Main agent integrates and runs the suite</li></ul></div>
+        <div class="sheet"><h4 aria-level="3">Explore → Summarize</h4><ul><li>Subagent reads the heavy stuff</li><li>Returns a short summary with paths</li><li>Main context stays small</li></ul></div>
+        <div class="sheet"><h4 aria-level="3">Plan with Opus, build with Sonnet</h4><ul><li>Strongest model for reasoning</li><li>Balanced model for execution</li><li>Haiku for mechanical edits</li></ul></div>
       </div>
     </section>
 
@@ -1884,10 +1951,10 @@ Given our stack (@CLAUDE.md) and hosting (single Railway instance, may scale to 
       <div class="kicker">17.5</div>
       <h2 style="font-size:26px;margin-top:8px">Context management</h2>
       <div class="sheet-grid">
-        <div class="sheet"><h4>Every session</h4><ul><li>One feature or task per session</li><li><code>/rename</code> it right away</li><li>Check <code>/context</code> in long sessions</li><li>Side questions go in <code>/btw</code></li></ul></div>
-        <div class="sheet"><h4>When it fills up</h4><ul><li>~60–70%: <code>/compact</code> with focus notes, between steps</li><li>Task done: <code>/clear</code> or a new session</li><li>Too deep: write a handoff, start fresh</li></ul></div>
-        <div class="sheet"><h4>Keep it lean</h4><ul><li>CLAUDE.md under ~200 lines</li><li>Few MCP servers and plugins</li><li>Deny reads of build output, deps, data</li><li>Skills over giant prompts</li></ul></div>
-        <div class="sheet"><h4>Signs you're too deep</h4><ul><li>Claude forgets rules from CLAUDE.md</li><li>Repeats a mistake you already corrected</li><li>Answers get slower and vaguer</li><li>Auto-compact fires</li></ul></div>
+        <div class="sheet"><h4 aria-level="3">Every session</h4><ul><li>One feature or task per session</li><li><code>/rename</code> it right away</li><li>Check <code>/context</code> in long sessions</li><li>Side questions go in <code>/btw</code></li></ul></div>
+        <div class="sheet"><h4 aria-level="3">When it fills up</h4><ul><li>~60–70%: <code>/compact</code> with focus notes, between steps</li><li>Task done: <code>/clear</code> or a new session</li><li>Too deep: write a handoff, start fresh</li></ul></div>
+        <div class="sheet"><h4 aria-level="3">Keep it lean</h4><ul><li>CLAUDE.md under ~200 lines</li><li>Few MCP servers and plugins</li><li>Deny reads of build output, deps, data</li><li>Skills over giant prompts</li></ul></div>
+        <div class="sheet"><h4 aria-level="3">Signs you're too deep</h4><ul><li>Claude forgets rules from CLAUDE.md</li><li>Repeats a mistake you already corrected</li><li>Answers get slower and vaguer</li><li>Auto-compact fires</li></ul></div>
       </div>
     </section>
 
@@ -1895,10 +1962,10 @@ Given our stack (@CLAUDE.md) and hosting (single Railway instance, may scale to 
       <div class="kicker">17.6</div>
       <h2 style="font-size:26px;margin-top:8px">Planning</h2>
       <div class="sheet-grid">
-        <div class="sheet"><h4>Use plan mode for</h4><ul><li>Changes across several files</li><li>Refactors and migrations</li><li>Unfamiliar parts of the codebase</li><li>Anything you can't describe in two sentences</li></ul></div>
-        <div class="sheet"><h4>A good plan lists</h4><ul><li>Files to change or create</li><li>Order of work, tests green at each step</li><li>Data model and API changes</li><li>Risks and open questions</li><li>How each acceptance criterion is verified</li></ul></div>
-        <div class="sheet"><h4>Tuning</h4><ul><li><code>/model</code> Opus for hard plans</li><li>Thinking on (<code>/config</code>)</li><li><code>/effort</code> medium to high</li><li><code>/ultraplan</code> when regular plans are shallow</li></ul></div>
-        <div class="sheet"><h4>After the plan</h4><ul><li>Save it to a file</li><li>Review it (or get a second opinion)</li><li>Implement in a fresh session from the file</li></ul></div>
+        <div class="sheet"><h4 aria-level="3">Use plan mode for</h4><ul><li>Changes across several files</li><li>Refactors and migrations</li><li>Unfamiliar parts of the codebase</li><li>Anything you can't describe in two sentences</li></ul></div>
+        <div class="sheet"><h4 aria-level="3">A good plan lists</h4><ul><li>Files to change or create</li><li>Order of work, tests green at each step</li><li>Data model and API changes</li><li>Risks and open questions</li><li>How each acceptance criterion is verified</li></ul></div>
+        <div class="sheet"><h4 aria-level="3">Tuning</h4><ul><li><code>/model</code> Opus for hard plans</li><li>Thinking on (<code>/config</code>)</li><li><code>/effort</code> medium to high</li><li><code>/ultraplan</code> when regular plans are shallow</li></ul></div>
+        <div class="sheet"><h4 aria-level="3">After the plan</h4><ul><li>Save it to a file</li><li>Review it (or get a second opinion)</li><li>Implement in a fresh session from the file</li></ul></div>
       </div>
     </section>
 
@@ -1906,10 +1973,10 @@ Given our stack (@CLAUDE.md) and hosting (single Railway instance, may scale to 
       <div class="kicker">17.7</div>
       <h2 style="font-size:26px;margin-top:8px">Debugging</h2>
       <div class="sheet-grid">
-        <div class="sheet"><h4>Give Claude</h4><ul><li>Exact error and stack trace (trimmed)</li><li>Expected vs actual behavior</li><li>Steps to reproduce</li><li>What changed recently (commit, deploy)</li><li>The likely files, with <code>@</code></li></ul></div>
-        <div class="sheet"><h4>Ask for</h4><ul><li>Ranked hypotheses before fixes</li><li>A cheap experiment per hypothesis</li><li>A failing test that reproduces it</li><li>The smallest fix, then the full suite</li></ul></div>
-        <div class="sheet"><h4>Techniques</h4><ul><li>Temporary logs tagged for cleanup</li><li><code>git bisect</code> with Claude running the check</li><li>Paste a screenshot for UI bugs</li><li>Use <kbd>!</kbd> so errors land in context</li></ul></div>
-        <div class="sheet bad"><h4>Avoid</h4><ul><li>"It's broken, fix it"</li><li>Accepting a fix without a root cause</li><li>Letting it edit tests to pass</li><li>Debugging deep in a bloated session</li></ul></div>
+        <div class="sheet"><h4 aria-level="3">Give Claude</h4><ul><li>Exact error and stack trace (trimmed)</li><li>Expected vs actual behavior</li><li>Steps to reproduce</li><li>What changed recently (commit, deploy)</li><li>The likely files, with <code>@</code></li></ul></div>
+        <div class="sheet"><h4 aria-level="3">Ask for</h4><ul><li>Ranked hypotheses before fixes</li><li>A cheap experiment per hypothesis</li><li>A failing test that reproduces it</li><li>The smallest fix, then the full suite</li></ul></div>
+        <div class="sheet"><h4 aria-level="3">Techniques</h4><ul><li>Temporary logs tagged for cleanup</li><li><code>git bisect</code> with Claude running the check</li><li>Paste a screenshot for UI bugs</li><li>Use <kbd>!</kbd> so errors land in context</li></ul></div>
+        <div class="sheet bad"><h4 aria-level="3">Avoid</h4><ul><li>"It's broken, fix it"</li><li>Accepting a fix without a root cause</li><li>Letting it edit tests to pass</li><li>Debugging deep in a bloated session</li></ul></div>
       </div>
     </section>
 
@@ -1917,8 +1984,8 @@ Given our stack (@CLAUDE.md) and hosting (single Railway instance, may scale to 
       <div class="kicker">17.8</div>
       <h2 style="font-size:26px;margin-top:8px">Code review</h2>
       <div class="sheet-grid">
-        <div class="sheet"><h4>Review checklist</h4><ul><li>Matches the spec and acceptance criteria</li><li>Edge cases and error handling</li><li>Security: injection, authz, secrets, XSS</li><li>Performance: N+1 queries, unbounded work</li><li>Readability, naming, dead code</li><li>Tests cover the new behavior</li></ul></div>
-        <div class="sheet"><h4>Set up once</h4><ul><li><code>security-reviewer</code> agent (read-only, Opus)</li><li><code>quality-reviewer</code> agent (read-only)</li><li><code>/review-feature</code> runs both in parallel</li><li>Ask before applying fixes</li></ul></div>
+        <div class="sheet"><h4 aria-level="3">Review checklist</h4><ul><li>Matches the spec and acceptance criteria</li><li>Edge cases and error handling</li><li>Security: injection, authz, secrets, XSS</li><li>Performance: N+1 queries, unbounded work</li><li>Readability, naming, dead code</li><li>Tests cover the new behavior</li></ul></div>
+        <div class="sheet"><h4 aria-level="3">Set up once</h4><ul><li><code>security-reviewer</code> agent (read-only, Opus)</li><li><code>quality-reviewer</code> agent (read-only)</li><li><code>/review-feature</code> runs both in parallel</li><li>Ask before applying fixes</li></ul></div>
       </div>
     </section>
 
@@ -1926,10 +1993,10 @@ Given our stack (@CLAUDE.md) and hosting (single Railway instance, may scale to 
       <div class="kicker">17.9</div>
       <h2 style="font-size:26px;margin-top:8px">Common mistakes</h2>
       <div class="sheet-grid">
-        <div class="sheet bad"><h4>Workflow</h4><ul><li>Building several features in one session</li><li>Skipping the spec, then fixing guesses for hours</li><li>Not reading the plan before approving</li><li>No branch, no commits: nothing to roll back to</li><li>Trusting "all tests pass" without looking</li></ul></div>
-        <div class="sheet bad"><h4>Prompts</h4><ul><li>Vague asks that force repo-wide searches</li><li>Typos in file paths (use <code>@</code>)</li><li>Pasting whole logs and files</li><li>No "don't change anything else"</li><li>Re-explaining the stack every session</li></ul></div>
-        <div class="sheet bad"><h4>Setup</h4><ul><li>Connecting every MCP server you find</li><li>A 500-line CLAUDE.md, with IMPORTANT everywhere</li><li>Installing community skills without reading them</li><li>Allowing <code>rm</code>, <code>git push</code> or deploys without asking</li></ul></div>
-        <div class="sheet bad"><h4>Security</h4><ul><li>Tokens pasted into prompts or screenshots</li><li>Claude allowed to read <code>.env</code></li><li>Write access to a production database</li><li>Over-scoped GitHub tokens</li></ul></div>
+        <div class="sheet bad"><h4 aria-level="3">Workflow</h4><ul><li>Building several features in one session</li><li>Skipping the spec, then fixing guesses for hours</li><li>Not reading the plan before approving</li><li>No branch, no commits: nothing to roll back to</li><li>Trusting "all tests pass" without looking</li></ul></div>
+        <div class="sheet bad"><h4 aria-level="3">Prompts</h4><ul><li>Vague asks that force repo-wide searches</li><li>Typos in file paths (use <code>@</code>)</li><li>Pasting whole logs and files</li><li>No "don't change anything else"</li><li>Re-explaining the stack every session</li></ul></div>
+        <div class="sheet bad"><h4 aria-level="3">Setup</h4><ul><li>Connecting every MCP server you find</li><li>A 500-line CLAUDE.md, with IMPORTANT everywhere</li><li>Installing community skills without reading them</li><li>Allowing <code>rm</code>, <code>git push</code> or deploys without asking</li></ul></div>
+        <div class="sheet bad"><h4 aria-level="3">Security</h4><ul><li>Tokens pasted into prompts or screenshots</li><li>Claude allowed to read <code>.env</code></li><li>Write access to a production database</li><li>Over-scoped GitHub tokens</li></ul></div>
       </div>
     </section>
 
@@ -1937,10 +2004,10 @@ Given our stack (@CLAUDE.md) and hosting (single Railway instance, may scale to 
       <div class="kicker">17.10</div>
       <h2 style="font-size:26px;margin-top:8px">Best practices</h2>
       <div class="sheet-grid">
-        <div class="sheet"><h4>Direction</h4><ul><li>You decide, Claude implements</li><li>Specs for anything non-trivial</li><li>Plan before multi-file changes</li><li>Acceptance criteria you can check</li></ul></div>
-        <div class="sheet"><h4>Memory</h4><ul><li>Start with <code>/init</code>, then edit by hand</li><li>Codify repeated mistakes into CLAUDE.md</li><li>Update it after every feature</li><li>Audit it monthly</li></ul></div>
-        <div class="sheet"><h4>Safety</h4><ul><li>Deny rules for secrets and destructive commands</li><li>Protective PreToolUse hooks from day one</li><li>Review diffs before approving</li><li>Least-privilege tokens for MCP</li></ul></div>
-        <div class="sheet"><h4>Quality</h4><ul><li>Formatter and linter hooks</li><li>Tests written from the spec</li><li>Separate reviewer agents</li><li>Small commits at every milestone</li></ul></div>
+        <div class="sheet"><h4 aria-level="3">Direction</h4><ul><li>You decide, Claude implements</li><li>Specs for anything non-trivial</li><li>Plan before multi-file changes</li><li>Acceptance criteria you can check</li></ul></div>
+        <div class="sheet"><h4 aria-level="3">Memory</h4><ul><li>Start with <code>/init</code>, then edit by hand</li><li>Codify repeated mistakes into CLAUDE.md</li><li>Update it after every feature</li><li>Audit it monthly</li></ul></div>
+        <div class="sheet"><h4 aria-level="3">Safety</h4><ul><li>Deny rules for secrets and destructive commands</li><li>Protective PreToolUse hooks from day one</li><li>Review diffs before approving</li><li>Least-privilege tokens for MCP</li></ul></div>
+        <div class="sheet"><h4 aria-level="3">Quality</h4><ul><li>Formatter and linter hooks</li><li>Tests written from the spec</li><li>Separate reviewer agents</li><li>Small commits at every milestone</li></ul></div>
       </div>
     </section>
 
@@ -1948,10 +2015,10 @@ Given our stack (@CLAUDE.md) and hosting (single Railway instance, may scale to 
       <div class="kicker">17.11</div>
       <h2 style="font-size:26px;margin-top:8px">Productivity tips</h2>
       <div class="sheet-grid">
-        <div class="sheet"><h4>Automate the repeats</h4><ul><li><code>/create-spec</code>: branch + spec</li><li><code>/test-feature</code>: write + run tests</li><li><code>/review-feature</code>: parallel reviews</li><li><code>/ship-feature</code>: commit, PR, merge, clean up</li></ul></div>
-        <div class="sheet"><h4>Stay in flow</h4><ul><li>A notification hook on Stop for long tasks</li><li><code>claude -c</code> to pick up where you left off</li><li>Draft long prompts in a notes file first</li><li><code>/voice</code> for long explanations</li></ul></div>
-        <div class="sheet"><h4>Less clicking</h4><ul><li>Allow safe commands in <code>/permissions</code></li><li>Auto-accept edits once the plan is approved</li><li>A status line showing context and branch</li></ul></div>
-        <div class="sheet"><h4>Level up</h4><ul><li><code>/insights</code> after 10–15 sessions</li><li>Package your setup as a plugin for the team</li><li>Headless mode: <code>claude -p</code> in scripts and CI</li></ul></div>
+        <div class="sheet"><h4 aria-level="3">Automate the repeats</h4><ul><li><code>/create-spec</code>: branch + spec</li><li><code>/test-feature</code>: write + run tests</li><li><code>/review-feature</code>: parallel reviews</li><li><code>/ship-feature</code>: commit, PR, merge, clean up</li></ul></div>
+        <div class="sheet"><h4 aria-level="3">Stay in flow</h4><ul><li>A notification hook on Stop for long tasks</li><li><code>claude -c</code> to pick up where you left off</li><li>Draft long prompts in a notes file first</li><li><code>/voice</code> for long explanations</li></ul></div>
+        <div class="sheet"><h4 aria-level="3">Less clicking</h4><ul><li>Allow safe commands in <code>/permissions</code></li><li>Auto-accept edits once the plan is approved</li><li>A status line showing context and branch</li></ul></div>
+        <div class="sheet"><h4 aria-level="3">Level up</h4><ul><li><code>/insights</code> after 10–15 sessions</li><li>Package your setup as a plugin for the team</li><li>Headless mode: <code>claude -p</code> in scripts and CI</li></ul></div>
       </div>
     </section>
 
@@ -1977,6 +2044,7 @@ Given our stack (@CLAUDE.md) and hosting (single Railway instance, may scale to 
 
   <footer>
     <p>An independent study guide based on the CampusX "Claude Code" playlist (15 lessons), reorganized and expanded with practical notes. Not an official Anthropic resource. Claude Code changes quickly, so check <code>/help</code> and the official docs for the latest commands and flags.</p>
+    <p class="legal"><a href="/privacy">Privacy Policy</a> · <a href="/terms">Terms of Use</a></p>
   </footer>
 </div>
 </main>
@@ -1992,7 +2060,7 @@ Given our stack (@CLAUDE.md) and hosting (single Railway instance, may scale to 
     set(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
   };
   const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>';
+  const CHECK = '<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>';
 
   /* ---------------- lessons ---------------- */
   const LESSONS = [
@@ -2162,14 +2230,14 @@ Given our stack (@CLAUDE.md) and hosting (single Railway instance, may scale to 
       const srcText = src ? src.textContent.replace(/^[\s·]+/, '') : '';
       k.innerHTML = '<span class="lnum">Lesson ' + l.n + '</span>' +
         (srcText ? '<span class="src">' + esc(srcText) + '</span>' : '') +
-        '<span class="rt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>' + minutes[l.id] + ' min read</span>' +
+        '<span class="rt"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>' + minutes[l.id] + ' min read</span>' +
         '<span class="st" data-st="' + l.id + '" hidden>' + CHECK.replace('<svg ', '<svg width="14" height="14" ') + 'Completed</span>';
     }
     const next = LESSONS[idx + 1];
     const foot = document.createElement('div');
     foot.className = 'lfoot';
     foot.innerHTML =
-      '<div class="takeaways"><div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5V21h16"/></svg>Remember from lesson ' + l.n + '</div><ol>' +
+      '<div class="takeaways"><div class="t"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5V21h16"/></svg>Remember from lesson ' + l.n + '</div><ol>' +
       (TAKE[l.id] || []).map(t => '<li>' + esc(t) + '</li>').join('') + '</ol></div>' +
       '<div class="lrow"><button type="button" class="done-btn" data-id="' + l.id + '"><span class="ck">' + CHECK + '</span><span class="lbl">Mark lesson complete</span></button>' +
       (next ? '<a class="next-card" href="#' + next.id + '"><span>Next lesson</span><b>' + next.n + ' · ' + esc(next.title) + '</b></a>'
@@ -2222,7 +2290,7 @@ Given our stack (@CLAUDE.md) and hosting (single Railway instance, may scale to 
     // up next + continue
     const nx = nextLesson();
     const up = $('#upNext'), cont = $('#continueBtn');
-    const arrow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+    const arrow = '<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
     if (nx) {
       up.href = '#' + nx.id;
       up.innerHTML = '<span>' + (state.last === nx.id && hadHistory ? 'Pick up where you left off' : 'Up next') + '</span><b>' + nx.n + ' · ' + esc(nx.title) + '</b><em>' + (minutes[nx.id] || 5) + ' min read</em>';
@@ -2294,8 +2362,11 @@ Given our stack (@CLAUDE.md) and hosting (single Railway instance, may scale to 
 
   /* ---------------- mobile nav ---------------- */
   const nav = $('#nav');
-  $('#menuBtn').addEventListener('click', () => nav.classList.toggle('open'));
-  nav.addEventListener('click', e => { if (e.target.closest('a')) nav.classList.remove('open'); });
+  const menuBtn = $('#menuBtn');
+  const setNav = open => { nav.classList.toggle('open', open); menuBtn.setAttribute('aria-expanded', String(open)); };
+  menuBtn.addEventListener('click', () => setNav(!nav.classList.contains('open')));
+  nav.addEventListener('click', e => { if (e.target.closest('a')) setNav(false); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && nav.classList.contains('open')) { setNav(false); menuBtn.focus(); } });
 
   /* ---------------- scrollspy + last-lesson tracking ---------------- */
   const links = $$('.nav a');
@@ -2514,6 +2585,12 @@ Given our stack (@CLAUDE.md) and hosting (single Railway instance, may scale to 
   function openHash(){ const t = location.hash && document.getElementById(location.hash.slice(1)); if (t && t.tagName === 'DETAILS') t.open = true; }
   window.addEventListener('hashchange', openHash);
 
-  drawCtx(); drawCalc(); render(); openHash();
+  /* horizontally scrolling blocks must be reachable by keyboard */
+  function markScrollers(){ $$('.code pre, .vcard pre, .tablewrap').forEach(el => { if (el.scrollWidth > el.clientWidth + 1) el.tabIndex = 0; else el.removeAttribute('tabindex'); }); }
+  window.addEventListener('resize', markScrollers);
+
+  drawCtx(); drawCalc(); render(); openHash(); markScrollers();
 })();
 </script>
+</body>
+</html>
