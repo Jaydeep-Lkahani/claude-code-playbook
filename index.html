@@ -722,16 +722,17 @@ irm https://claude.ai/install.ps1 | iex
 <span class="cm"># Then, from your project root</span>
 cd ~/code/invoice-api
 claude</pre></div>
-    <div class="prose"><p>The first time, it asks whether you trust the folder (say yes for your own code) and opens a browser to authorize your account. You can use Claude Code from the terminal, the VS Code / JetBrains extensions, the desktop app, or the web. The terminal is the most complete: a few features (editing memory, configuring hooks) still work best there.</p></div>
+    <div class="prose"><p>The first time, it asks whether you trust the folder (say yes for your own code) and opens a browser to authorize your account. You can use Claude Code from the terminal, the VS Code / JetBrains extensions, the desktop app, or the web. This guide uses the terminal throughout.</p></div>
 
     <h3>Bash mode: run shell commands inside the session</h3>
-    <div class="prose"><p>Type <kbd>!</kbd> at the start of the input to switch to bash mode and run a shell command without leaving Claude Code. The command <em>and its output</em> become part of the conversation, so you can follow up with "why did that fail?" or "what did that install?". If you run the same command in a separate terminal, Claude never sees it.</p></div>
+    <div class="prose"><p>Type <kbd>!</kbd> at the start of the input to switch to bash mode and run a shell command without leaving Claude Code. The command <em>and its output</em> are added to the conversation, and Claude responds to the output automatically, so <code>! pytest -q</code> gets you an explanation of the failures without a second prompt. If you run the same command in a separate terminal, Claude never sees it.</p>
+      <p>Each command runs on its own, so changes like <code>source .venv/bin/activate</code> don't carry over to the next one. Activate your virtualenv before you start <code>claude</code>, or call the tools inside it directly, as below.</p></div>
     <div class="code" data-lang="claude code"><pre>! python3 -m venv .venv
-! source .venv/bin/activate
-! pip install -r requirements.txt
-! python3 app.py
-&gt; The server started on 5001 but /login returns 500. Look at the traceback above and explain the cause.</pre></div>
-    <div class="note tip"><span class="t">Tip</span>Bash output costs context tokens too. Use <kbd>!</kbd> for commands whose output Claude should reason about. For noisy things (a 3,000-line install log, a dev server that streams forever), use a separate terminal.</div>
+! .venv/bin/pip install -r requirements.txt
+! .venv/bin/python -m pytest -q
+<span class="cm">  (Claude reads the test output and explains any failures)</span>
+&gt; Fix the first failing test. Don't change the tests.</pre></div>
+    <div class="note tip"><span class="t">Tip</span>Bash output costs context tokens too, and Claude's automatic reply costs the same as a normal prompt. Use <kbd>!</kbd> for commands whose output Claude should reason about. For noisy things (a 3,000-line install log, a dev server that streams forever), use a separate terminal.</div>
 
     <h3>Put the project under Git first</h3>
     <div class="code" data-lang="bash"><pre>git init
@@ -748,8 +749,8 @@ git push -u origin main</pre></div>
     <h3>Running it for free (with limits)</h3>
     <div class="prose"><p>If you can't pay yet, you can point Claude Code at open-source models through <strong>Ollama</strong>. You get the same interface, but a weaker model: expect slower responses and lower quality, especially on local models with limited RAM. Ollama's hosted "cloud" models have usage caps that a few big requests can burn through.</p></div>
     <div class="code" data-lang="bash"><pre><span class="cm"># after installing Ollama</span>
-ollama pull qwen2.5-coder:7b      <span class="cm"># a local coding model (fits ~16 GB RAM)</span>
 ollama launch claude              <span class="cm"># pick a cloud or local model from the menu</span></pre></div>
+    <div class="prose" style="margin-top:14px"><p>Ollama recommends local models that support tool calling, with the context length set to 64K or more. That takes a lot of memory, which is why the cloud models are often the more practical free option.</p></div>
     <div class="note warn"><span class="t">Be realistic</span>Free setups are fine for learning the interface. For real projects, and for the workflows in this guide (plan mode, subagents, long refactors), the quality gap with Anthropic's models is large.</div>
   </section>
 
@@ -766,7 +767,7 @@ ollama launch claude              <span class="cm"># pick a cloud or local model
     </div>
     <figure class="fig">
       <div class="hx">
-        <div class="fn"><span class="fl">your machine</span><b>The harness (body)</b><ul class="fchips" aria-label="Tools"><li>Read</li><li>Edit</li><li>Bash</li><li>Grep</li></ul><span>Opens files, runs commands, asks your permission.</span></div>
+        <div class="fn"><span class="fl">your machine</span><b>The harness (body)</b><ul class="fchips" aria-label="Tools"><li>Read</li><li>Write</li><li>Edit</li><li>Bash</li></ul><span>Opens files, runs commands, asks your permission.</span></div>
         <ol class="hx-msgs">
           <li><span class="n">1</span><span><span class="sr-only">Harness to model: </span>Your prompt plus context</span><span class="d h" aria-hidden="true">→</span><span class="d v" aria-hidden="true">↓</span></li>
           <li><span class="n">2</span><span><span class="sr-only">Model to harness: </span>"Call the Read tool on <code>app.py</code>"</span><span class="d h" aria-hidden="true">←</span><span class="d v" aria-hidden="true">↑</span></li>
@@ -796,7 +797,7 @@ ollama launch claude              <span class="cm"># pick a cloud or local model
       </ul>
     </div>
     <h3>Tools and permissions</h3>
-    <div class="prose"><p>Built-in tools include Read, Write/Edit, Bash, Grep/Glob (search), WebSearch/WebFetch and Agent (starts subagents). You can add more with <a href="#mcp">MCP</a>. In Manual mode, Claude asks before editing files or running commands. Use <code>/permissions</code> to allow, ask or deny specific tools so you aren't clicking "yes" 40 times a session.</p></div>
+    <div class="prose"><p>Built-in tools include Read, Write, Edit, Bash, WebSearch, WebFetch and Agent (starts subagents). On macOS and Linux, Claude searches with <code>find</code> and <code>grep</code> through Bash. Windows has dedicated Glob and Grep tools. You can add more with <a href="#mcp">MCP</a>. In Manual mode, Claude asks before editing files or running commands. Use <code>/permissions</code> to allow, ask or deny specific tools so you aren't clicking "yes" 40 times a session.</p></div>
     <div class="code" data-lang="json · .claude/settings.json"><pre>{
   "permissions": {
     "allow": [
@@ -861,11 +862,11 @@ ollama launch claude              <span class="cm"># pick a cloud or local model
     <div class="tablewrap"><table>
       <thead><tr><th>Command</th><th>What it does</th></tr></thead>
       <tbody>
-        <tr><td><code>/model</code></td><td>Switch between Opus (deepest, most expensive), Sonnet (balanced default) and Haiku (fast, cheap)</td></tr>
+        <tr><td><code>/model</code></td><td>Switch models: Fable (most capable), Opus, Sonnet (balanced) or Haiku (fast, cheap)</td></tr>
         <tr><td><code>/usage</code></td><td>Plan usage for the current session window and the week</td></tr>
         <tr><td><code>/context</code></td><td>What is filling your context window right now, by category</td></tr>
         <tr><td><code>/compact</code></td><td>Summarize the conversation to free space (accepts focus instructions)</td></tr>
-        <tr><td><code>/clear</code></td><td>Wipe the conversation and start clean in the same session</td></tr>
+        <tr><td><code>/clear</code></td><td>Start a new conversation with empty context (the old one stays in <code>/resume</code>)</td></tr>
         <tr><td><code>/rewind</code></td><td>Go back to an earlier point, restoring the conversation, the code, or both</td></tr>
         <tr><td><code>/init</code></td><td>Scan the repo and generate a starter CLAUDE.md</td></tr>
         <tr><td><code>/memory</code></td><td>Open project memory, user memory, or the auto-memory folder</td></tr>
@@ -879,12 +880,13 @@ ollama launch claude              <span class="cm"># pick a cloud or local model
     <div class="tablewrap"><table>
       <thead><tr><th>Model</th><th>Use it for</th><th>Cost and speed</th></tr></thead>
       <tbody>
-        <tr><td><b>Opus</b></td><td>Architecture decisions, hard debugging, planning large features, big refactors</td><td>Slowest, burns usage fastest</td></tr>
-        <tr><td><b>Sonnet</b></td><td>Everyday implementation, tests, reviews. The default for good reason.</td><td>Balanced</td></tr>
+        <tr><td><b>Fable</b></td><td>The hardest, longest-running tasks, bigger than a single sitting. Not the default on any plan: pick it with <code>/model fable</code>.</td><td>Most capable. On some plans it bills to usage credits, and Claude Code asks first.</td></tr>
+        <tr><td><b>Opus</b></td><td>Architecture decisions, hard debugging, planning large features, big refactors</td><td>Slower, uses up your limits faster</td></tr>
+        <tr><td><b>Sonnet</b></td><td>Everyday implementation, tests, reviews</td><td>Balanced</td></tr>
         <tr><td><b>Haiku</b></td><td>Simple, repetitive edits, renames, boilerplate, quick lookups</td><td>Fastest and cheapest</td></tr>
       </tbody>
     </table></div>
-    <div class="note tip"><span class="t">A pattern that works</span>Plan with Opus, build with Sonnet. The thinking-heavy part (reading the codebase, weighing trade-offs, writing a plan) benefits from the strongest model. Turning a clear plan into code usually doesn't.</div>
+    <div class="note tip"><span class="t">A pattern that works</span>Plan with Opus, build with Sonnet. The thinking-heavy part (reading the codebase, weighing trade-offs, writing a plan) benefits from a stronger model. Turning a clear plan into code usually doesn't. The <code>opusplan</code> model setting does this switch for you: Opus in plan mode, Sonnet for execution.</div>
   </section>
 
   <section class="topic" id="prompting" data-title="Prompting and code changes">
@@ -944,7 +946,7 @@ Requirements:
     <div class="kicker">06 <span class="src">· Lesson 5</span></div>
     <h2>The context window</h2>
     <dl class="www">
-      <div><dt>What</dt><dd>The model's working memory: everything it can see at once, measured in tokens. Usually around 200K for Claude Code.</dd></div>
+      <div><dt>What</dt><dd>The model's working memory: everything it can see at once, measured in tokens. 1M tokens on current models, 200K on older ones.</dd></div>
       <div><dt>Why</dt><dd>It drives cost, it limits how long a session can run, and answer quality drops as it fills up.</dd></div>
       <div><dt>When</dt><dd>Always. Check <code>/context</code> during any long session.</dd></div>
     </dl>
@@ -955,14 +957,14 @@ Requirements:
         <li><strong>Each new session starts with a fresh window.</strong> Nothing from the previous session is in it unless it comes from a file like CLAUDE.md.</li>
         <li><strong>Both sides count.</strong> Your prompts, pasted code and images are input tokens. Claude's replies, the files it reads and every tool output also land in the window. Output from Claude and its tools usually fills the window much faster than what you type.</li>
         <li><strong>The model has no memory, so the whole conversation is re-sent on every turn.</strong> Turn 10 carries turns 1–9 with it. Long sessions get expensive fast.</li>
-        <li><strong>Not all 200K is yours.</strong> The system prompt, tool definitions, MCP tools, CLAUDE.md, memory and skill descriptions load before you type, and a buffer is held back for auto-compaction. In practice you have roughly 150K to work with.</li>
+        <li><strong>Part of it is used before you type.</strong> The system prompt, tool definitions, MCP tool names, CLAUDE.md, memory and skill descriptions all load at the start. Run <code>/context</code> to see your own numbers.</li>
         <li><strong>Quality drops as it fills.</strong> Deep into a full window, Claude is more likely to forget instructions or miss details in the middle of the conversation.</li>
       </ul>
     </div>
 
     <div class="widget" id="ctxWidget">
-      <h4 aria-level="3">Where your 200K tokens go</h4>
-      <p class="sub">Approximate numbers from a real <code>/context</code> readout at the start of a session. Drag the slider to add conversation.</p>
+      <h4 aria-level="3">What fills a 200K window</h4>
+      <p class="sub">Representative startup numbers in a 200K window, the size older models and some cloud providers use. Current models have 1M, so the same startup load is a much smaller share. Drag the sliders to add conversation.</p>
       <div class="ctxbar" id="ctxBar" role="img" aria-label="Context window usage bar"></div>
       <div class="legend" id="ctxLegend"></div>
       <div class="slider">
@@ -971,7 +973,7 @@ Requirements:
         <input type="range" id="ctxConv" min="0" max="160" step="1" value="20">
       </div>
       <div class="slider">
-        <label for="ctxMcp">MCP tool definitions loaded</label>
+        <label for="ctxMcp">MCP tools loaded at startup</label>
         <output id="ctxMcpOut">4K</output>
         <input type="range" id="ctxMcp" min="0" max="40" step="1" value="4">
       </div>
@@ -980,8 +982,8 @@ Requirements:
 
     <h3>Auto-compact, /compact and /clear</h3>
     <div class="prose">
-      <p>When usage gets high, Claude Code <strong>auto-compacts</strong>: it summarizes the conversation so far and replaces the history with that summary. It keeps you going, but it can happen in the middle of a task, and a summary always loses detail.</p>
-      <p>So do it yourself, at a moment you choose. Check <code>/context</code>. When you are around 60–70% full and between tasks, run <code>/compact</code>, optionally telling it what to keep. Press <kbd>Ctrl</kbd>+<kbd>O</kbd> afterwards to read the summary.</p>
+      <p>When the window is nearly full, Claude Code <strong>auto-compacts</strong>: it summarizes the conversation so far and replaces the history with that summary. It keeps you going, but it can happen in the middle of a task, and a summary always loses detail.</p>
+      <p>So do it yourself, at a moment you choose. Check <code>/context</code>. When a session has grown long and you're between tasks, run <code>/compact</code>, optionally telling it what to keep. To make the automatic pass run earlier, set a threshold with <code>/autocompact</code>, for example <code>/autocompact 500k</code>.</p>
     </div>
     <figure class="fig">
       <div role="img" aria-label="Request size grows on every turn because each request re-sends all earlier turns. After /compact, the earlier turns are replaced by a short summary, so the next request is small again.">
@@ -997,7 +999,7 @@ Requirements:
       <figcaption><b>What each request carries.</b> Every turn sends the whole conversation again, so requests keep growing. <code>/compact</code> swaps the history for a summary: much smaller, but some detail is lost. Bar lengths are illustrative.</figcaption>
     </figure>
     <div class="code" data-lang="claude code"><pre>&gt; /context
-<span class="cm">  ⛁ Messages 88.4k · System 6.3k · Tools 8.3k · MCP 3.9k · Memory 1.2k · Free 58k</span>
+<span class="cm">  ⛁ Messages 88.4k · System 6.3k · Tools 8.3k · MCP 3.9k · Memory 1.2k · Free 891.9k</span>
 &gt; /compact Keep the final schema for the invoices table, the list of files changed, and the two failing tests. Drop the exploration.</pre></div>
     <div class="tablewrap"><table>
       <thead><tr><th>Situation</th><th>Do this</th></tr></thead>
@@ -1009,7 +1011,7 @@ Requirements:
       </tbody>
     </table></div>
     <h3>Keep junk out of the window</h3>
-    <div class="prose"><p>Big generated files (lock files, build output, virtualenvs, data dumps, minified bundles) should never be read. The reliable way is a deny rule in <code>.claude/settings.json</code>. (Some guides mention a <code>.claudeignore</code> file, but it was never reliably honored. Use permission rules instead.)</p></div>
+    <div class="prose"><p>Big generated files (lock files, build output, virtualenvs, data dumps, minified bundles) should never be read. The reliable way is a deny rule in <code>.claude/settings.json</code>. (Some guides mention a <code>.claudeignore</code> file, but it isn't part of Claude Code's documented features. Use permission rules instead.)</p></div>
     <div class="code" data-lang="json · .claude/settings.json"><pre>{
   "permissions": {
     "deny": [
@@ -1078,7 +1080,7 @@ spending summaries on a profile page.
       <thead><tr><th>Location</th><th>Scope</th><th>Loaded</th></tr></thead>
       <tbody>
         <tr><td><code>./CLAUDE.md</code> or <code>./.claude/CLAUDE.md</code></td><td>Project, shared with the team via Git</td><td>Every session</td></tr>
-        <tr><td><code>./CLAUDE.local.md</code></td><td>Your personal notes for this project, git-ignored</td><td>Every session</td></tr>
+        <tr><td><code>./CLAUDE.local.md</code></td><td>Your personal notes for this project (add it to <code>.gitignore</code>)</td><td>Every session</td></tr>
         <tr><td><code>~/.claude/CLAUDE.md</code></td><td>You, across all projects (your style, preferred tools)</td><td>Every session</td></tr>
         <tr><td><code>frontend/CLAUDE.md</code>, <code>api/CLAUDE.md</code>…</td><td>One folder of a large repo</td><td>Only when Claude works in that folder</td></tr>
       </tbody>
@@ -1086,7 +1088,7 @@ spending summaries on a profile page.
     <h3>The .claude folder: Claude Code's toolbox</h3>
     <div class="tree"><span class="d">your-project/</span>
 ├── CLAUDE.md
-├── CLAUDE.local.md            <span class="cm"># personal, git-ignored</span>
+├── CLAUDE.local.md            <span class="cm"># personal, add to .gitignore</span>
 └── <span class="d">.claude/</span>                   <span class="cm"># project level, committed</span>
     ├── settings.json          <span class="cm"># permissions + hooks for the team</span>
     ├── settings.local.json    <span class="cm"># your personal overrides</span>
@@ -1202,16 +1204,15 @@ Users should be able to download their expenses as CSV, filtered by the same dat
       <div><dt>Why</dt><dd>Finding a wrong assumption in a plan costs one message. Finding it in 400 lines of code costs a rewrite.</dd></div>
       <div><dt>When</dt><dd>Before any multi-file change, refactor, migration or unfamiliar area. Skip it for one-line fixes.</dd></div>
     </dl>
-    <div class="prose"><p>Enter plan mode with <kbd>Shift</kbd>+<kbd>Tab</kbd> (press until you see "plan mode on") or type <code>/plan</code>. Claude reads files, often through Explore and Plan subagents, and produces a plan. Then you choose: approve with manual edit approval, approve with auto-accept, or keep refining.</p></div>
+    <div class="prose"><p>Enter plan mode with <kbd>Shift</kbd>+<kbd>Tab</kbd> (press until you see "plan mode on") or type <code>/plan</code>. Claude reads files, often through Explore and Plan subagents, and produces a plan. Then you choose: approve and continue in auto mode (or with auto-accepted edits), approve and review each edit yourself, or keep planning. Press <kbd>Ctrl</kbd>+<kbd>G</kbd> to edit the plan in your text editor first.</p></div>
     <div class="code wrap" data-lang="prompt · plan mode"><pre>Read @.claude/specs/03-login-logout.md and @CLAUDE.md, look at the existing routes and templates, and write a detailed implementation plan: files to change, new helpers, order of work, and how you'll verify each acceptance criterion. Save the plan to .claude/plans/03-login-logout.md. Don't write any code yet.</pre></div>
     <h3>Tune the thinking</h3>
     <div class="tablewrap"><table>
       <thead><tr><th>Setting</th><th>What it does</th><th>How</th></tr></thead>
       <tbody>
         <tr><td><b>Model</b></td><td>Use Opus for complex, many-file plans and deep architecture decisions. Sonnet is fine for most features.</td><td><code>/model</code></td></tr>
-        <tr><td><b>Extended thinking</b></td><td>Claude reasons on a "scratchpad" before answering, like working a problem on a whiteboard before speaking. Better plans, more tokens.</td><td><code>/config</code> → thinking mode</td></tr>
-        <tr><td><b>Effort level</b></td><td>How much thinking budget Claude may spend: low, medium, high, xhigh or max. Which levels you can pick depends on the model. Medium to high suits most planning.</td><td><code>/effort</code></td></tr>
-        <tr><td><b>Ultraplan</b></td><td>Runs planning in the cloud on a strong model, with a web editor to refine the plan, then "teleports" it back to your terminal to implement.</td><td><code>/ultraplan &lt;task&gt;</code></td></tr>
+        <tr><td><b>Extended thinking</b></td><td>Claude reasons on a "scratchpad" before answering, like working a problem on a whiteboard before speaking. Better plans, more tokens. Opus 5.5 and the Fable models always think, and effort sets how much.</td><td><code>/config</code> → thinking mode</td></tr>
+        <tr><td><b>Effort level</b></td><td>How much thinking budget Claude may spend: low, medium, high, xhigh, max, or auto. Which levels you can pick depends on the model. Medium to high suits most planning.</td><td><code>/effort</code></td></tr>
       </tbody>
     </table></div>
     <div class="versus">
@@ -1229,7 +1230,7 @@ Don't edit anything yet.</pre></div>
     <ul class="tips">
       <li>Ask Claude to list what it's unsure about. Those are exactly the questions you should answer before implementation.</li>
       <li>For big plans, paste the plan into a separate chat and ask for a critique. A second opinion is cheap.</li>
-      <li>Ultraplan is overkill for most work. Reach for it when regular plan mode keeps producing shallow plans on a genuinely hard problem.</li>
+      <li>If plans keep coming out shallow on a genuinely hard problem, raise the effort or switch to a stronger model for the planning step.</li>
     </ul>
   </section>
 
@@ -1375,7 +1376,7 @@ description: Use when building or restyling any Spendly page or component
     <div class="prose" style="margin-top:14px"><p>Claude starts these on its own (implicit), or you can ask directly (explicit):</p></div>
     <div class="code wrap" data-lang="prompt"><pre>Use an Explore subagent to map how authentication works across this repo (middleware, session storage, decorators, tests). Return a one-page summary with file paths. Don't paste file contents back.</pre></div>
     <h3>Custom subagents</h3>
-    <div class="prose"><p>A built-in agent does a generic security review. A custom one follows <em>your</em> checklist. Create one with <code>/agents</code> → Create new agent (let Claude draft it, then edit), or write the file yourself in <code>.claude/agents/</code>.</p></div>
+    <div class="prose"><p>A built-in agent does a generic security review. A custom one follows <em>your</em> checklist. Ask Claude to create one ("create a security-reviewer subagent in .claude/agents/ that…"), then edit the file, or write it yourself in <code>.claude/agents/</code>.</p></div>
     <div class="code" data-lang="markdown · .claude/agents/security-reviewer.md"><pre>---
 name: security-reviewer
 description: Reviews changed code for security issues. Use after a feature
@@ -1459,7 +1460,7 @@ Spec: .claude/specs/$ARGUMENTS.md
 claude mcp add sqlite -- npx -y @executeautomation/database-server /abs/path/to/spendly.db
 
 <span class="cm"># remote (http) server with a token</span>
-claude mcp add --transport http github https://api.githubcopilot.com/mcp \
+claude mcp add --transport http github https://api.githubcopilot.com/mcp/ \
   -H "Authorization: Bearer $GITHUB_PAT"
 
 <span class="cm"># share with the team: writes .mcp.json in the repo</span>
@@ -1470,7 +1471,7 @@ claude mcp remove sqlite</pre></div>
     <div class="prose" style="margin-top:14px"><p>Inside a session, <code>/mcp</code> shows each server's status (connected or failed), lets you reconnect or authenticate, and <strong>View tools</strong> lists exactly what a server can do. Always check a server's README for its current install command. The one you find in a blog post may be out of date, and not every server supports every setup (for example, some database servers don't work with a local SQLite file).</p></div>
     <figure class="fig">
       <div class="flow">
-        <div class="fn acc"><span class="fl">your session</span><b>Claude Code</b><span>At session start, loads each connected server's tool descriptions into context</span></div>
+        <div class="fn acc"><span class="fl">your session</span><b>Claude Code</b><span>At session start, learns each server's tool names. Full definitions load when needed.</span></div>
         <div class="fa"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
         <div class="fgroup"><span class="fl">MCP servers</span>
           <div class="flow"><div class="fn"><span class="fl">local · stdio</span><b>A process on your machine</b><span>e.g. the SQLite server</span></div><div class="fa"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div><div class="fn dash"><b><code>spendly.db</code></b><span>the database file</span></div></div>
@@ -1501,7 +1502,7 @@ Read the design and convert it to a Jinja2 template that extends base.html. Add 
         <tr><td><b>Playwright</b></td><td>Drive a real browser to test UI flows</td><td>"Open localhost:5001, register a user, and verify the redirect."</td></tr>
       </tbody>
     </table></div>
-    <div class="note tip"><span class="t">Fewer servers, better sessions</span>Every connected server loads its tool descriptions into the context at session start, whether you use it or not. Connecting every server you find slows Claude down and eats your budget. Keep the handful you use weekly. Remove the rest with <code>claude mcp remove</code>.</div>
+    <div class="note tip"><span class="t">Keep the servers you use</span>With MCP tool search, which is on by default, Claude Code loads only each server's tool names and instructions at session start and fetches full tool definitions when Claude needs them. So extra servers cost little context, but each one is still third-party code with access to your accounts and data. Remove the ones you don't use with <code>claude mcp remove</code>.</div>
   </section>
 
   <section class="topic" id="hooks" data-title="Hooks">
@@ -1543,7 +1544,7 @@ Read the design and convert it to a Jinja2 template that extends base.html. Add 
       <figcaption><b>Where hooks fire in a session.</b> One prompt can trigger many tool calls, and the PreToolUse and PostToolUse hooks run around each of them.</figcaption>
     </figure>
     <h3>Anatomy of a hook</h3>
-    <div class="prose"><p>Hooks live in <code>settings.json</code> (project, local or user). Each has an <strong>event</strong>, an optional <strong>matcher</strong> (which tools it applies to, like <code>Bash</code> or <code>Write|Edit</code>), and an <strong>action</strong> (the command to run). The harness pipes a JSON description of the event to your script on stdin. Your script's <strong>exit code</strong> decides what happens: <code>0</code> means continue, <code>2</code> means block, and whatever you print to stderr is sent back to Claude so it can change course.</p></div>
+    <div class="prose"><p>Hooks live in <code>settings.json</code> (project, local or user). Each has an <strong>event</strong>, an optional <strong>matcher</strong> (which tools it applies to, like <code>Bash</code> or <code>Write|Edit</code>), and an <strong>action</strong> (the command to run). The harness pipes a JSON description of the event to your script on stdin. Your script's <strong>exit code</strong> decides what happens: <code>0</code> means continue, and <code>2</code> means block. On a block, whatever you print to stderr is sent back to Claude so it can change course.</p></div>
     <div class="code" data-lang="json · .claude/settings.json"><pre>{
   "hooks": {
     "PreToolUse": [
@@ -1668,13 +1669,13 @@ sys.exit(0)       # allow</pre></div>
     <div class="tablewrap"><table>
       <thead><tr><th>Bucket</th><th>What's in it</th><th>Your lever</th></tr></thead>
       <tbody>
-        <tr><td><b>Startup load</b></td><td>System prompt (~6K), tool definitions (~8K), MCP tools, CLAUDE.md, memory, skill descriptions</td><td>Fewer MCP servers and plugins, a lean CLAUDE.md</td></tr>
+        <tr><td><b>Startup load</b></td><td>System prompt, built-in tool definitions, MCP tool names, CLAUDE.md, memory, skill descriptions</td><td>Fewer MCP servers and plugins, a lean CLAUDE.md</td></tr>
         <tr><td><b>Conversation re-send</b></td><td>The entire history goes back to the model on every turn</td><td>One task per session, <code>/compact</code>, <code>/clear</code>, handoff notes</td></tr>
         <tr><td><b>File reads and tool output</b></td><td>Every file Claude opens, every search result, every command output</td><td><code>@</code> mentions, scoped instructions, subagents, trimmed command output</td></tr>
         <tr><td><b>Model output and thinking</b></td><td>Replies, generated code, extended-thinking scratchpad</td><td>Ask for concise output, pick the right model and effort</td></tr>
       </tbody>
     </table></div>
-    <div class="note info"><span class="t">About caching</span>Claude Code uses prompt caching automatically, so re-sending an unchanged conversation prefix is much cheaper than processing it the first time. It still fills your context window and still counts toward limits. Switching models or editing CLAUDE.md mid-session changes that prefix and can make the next turns more expensive.</div>
+    <div class="note info"><span class="t">About caching</span>Claude Code uses prompt caching automatically, so re-sending an unchanged conversation prefix is much cheaper than processing it the first time. It still fills your context window and still counts toward limits. Switching models, changing the effort level or connecting an MCP server mid-session breaks the cache, so the next turn is slower and costs more. Editing CLAUDE.md doesn't break it, but the edit only takes effect after <code>/clear</code>, <code>/compact</code> or a restart.</div>
 
     <div class="widget" id="calcWidget">
       <h4>Why "one feature per session" matters</h4>
@@ -1688,7 +1689,7 @@ sys.exit(0)       # allow</pre></div>
         <div><b id="cRatio">—</b><span>how much more the long session costs</span></div>
       </div>
       <div class="chart" id="cChart"></div>
-      <div class="legend"><span><i style="background:var(--bad)"></i>One long session: request size per turn</span><span><i style="background:var(--good)"></i>Fresh session per feature</span><span><i style="background:var(--amber)"></i>~150K usable window</span></div>
+      <div class="legend"><span><i style="background:var(--bad)"></i>One long session: request size per turn</span><span><i style="background:var(--good)"></i>Fresh session per feature</span><span><i style="background:var(--amber)"></i>200K window (older models)</span></div>
     </div>
 
     <h3>The habits, with examples</h3>
@@ -1810,7 +1811,7 @@ Read @.claude/handoff.md. Continue with "next steps" item 1.</pre></div>
       <tbody>
         <tr><td><b>Model</b></td><td>Sonnet for most work. Haiku for mechanical edits. Opus only for hard planning and debugging.</td></tr>
         <tr><td><b>Effort / thinking</b></td><td>Lower effort for routine edits. Raise it for planning and tricky bugs.</td></tr>
-        <tr><td><b>MCP servers</b></td><td>Remove servers you don't use weekly. Each one loads its tool descriptions every session.</td></tr>
+        <tr><td><b>MCP servers</b></td><td>Remove servers you don't use. With tool search (the default) each adds only its tool names at startup, but fewer servers means fewer tools for Claude to choose from.</td></tr>
         <tr><td><b>Plugins and skills</b></td><td>Install only what you use. Write sharp skill descriptions so the wrong skills don't load.</td></tr>
         <tr><td><b>CLAUDE.md</b></td><td>Under ~200 lines. Move topic detail into <code>.claude/rules/</code> with path scoping, or into specs.</td></tr>
         <tr><td><b>Permission deny rules</b></td><td>Deny reads of build output, dependencies, data dumps and lock files.</td></tr>
@@ -1831,7 +1832,7 @@ Don't include exploration or anything we abandoned.</pre></div>
     <h3>Keep an eye on the meter</h3>
     <ul class="tips">
       <li><code>/context</code> shows what's filling the window right now. Check it when a session feels slow or forgetful.</li>
-      <li><code>/usage</code> shows your plan's session and weekly limits. Check it after each feature. (<code>/cost</code> shows spend on API billing.)</li>
+      <li><code>/usage</code> shows session cost, your plan's usage limits and activity stats. Check it after each feature. (<code>/cost</code> and <code>/stats</code> are aliases for it.)</li>
       <li>Configure a status line (<code>/statusline</code>) that shows context usage, so you never have to ask.</li>
       <li>Run <code>/insights</code> after a couple of weeks. It points out your costly habits.</li>
     </ul>
@@ -2094,11 +2095,11 @@ Given our stack (@CLAUDE.md) and hosting (single Railway instance, may scale to 
           <tr><td><kbd>@</kbd></td><td>Mention a file or folder with autocomplete</td></tr>
           <tr><td><kbd>/</kbd></td><td>Open the command menu (built-in, custom commands and skills)</td></tr>
           <tr><td><kbd>Ctrl</kbd>+<kbd>V</kbd></td><td>Paste an image (screenshot, mockup, error dialog)</td></tr>
-          <tr><td><kbd>Ctrl</kbd>+<kbd>O</kbd></td><td>Toggle the detailed transcript (see tool calls, compaction summary)</td></tr>
+          <tr><td><kbd>Ctrl</kbd>+<kbd>O</kbd></td><td>Toggle the transcript viewer (detailed tool calls, timestamps, models)</td></tr>
           <tr><td><kbd>Ctrl</kbd>+<kbd>R</kbd></td><td>Search your prompt history</td></tr>
           <tr><td><kbd>Ctrl</kbd>+<kbd>B</kbd></td><td>Send a long-running command to the background</td></tr>
           <tr><td><kbd>↑</kbd> / <kbd>↓</kbd></td><td>Cycle through previous prompts</td></tr>
-          <tr><td><kbd>\</kbd> then <kbd>Enter</kbd></td><td>New line in your prompt (<kbd>Shift</kbd>+<kbd>Enter</kbd> after <code>/terminal-setup</code>)</td></tr>
+          <tr><td><kbd>\</kbd> then <kbd>Enter</kbd></td><td>New line in your prompt. <kbd>Shift</kbd>+<kbd>Enter</kbd> works natively in most terminals. <code>/terminal-setup</code> adds it to VS Code, Cursor and a few others.</td></tr>
           <tr><td><kbd>Ctrl</kbd>+<kbd>C</kbd> twice</td><td>Exit Claude Code</td></tr>
           <tr><td>Hold <kbd>Space</kbd></td><td>Speak your prompt (after enabling <code>/voice</code>)</td></tr>
         </tbody>
@@ -2144,7 +2145,7 @@ Given our stack (@CLAUDE.md) and hosting (single Railway instance, may scale to 
       <h2 style="font-size:26px;margin-top:8px">Context management</h2>
       <div class="sheet-grid">
         <div class="sheet"><h4 aria-level="3">Every session</h4><ul><li>One feature or task per session</li><li><code>/rename</code> it right away</li><li>Check <code>/context</code> in long sessions</li><li>Side questions go in <code>/btw</code></li></ul></div>
-        <div class="sheet"><h4 aria-level="3">When it fills up</h4><ul><li>~60–70%: <code>/compact</code> with focus notes, between steps</li><li>Task done: <code>/clear</code> or a new session</li><li>Too deep: write a handoff, start fresh</li></ul></div>
+        <div class="sheet"><h4 aria-level="3">When it fills up</h4><ul><li>Long session: <code>/compact</code> with focus notes, between steps</li><li>Task done: <code>/clear</code> or a new session</li><li>Too deep: write a handoff, start fresh</li></ul></div>
         <div class="sheet"><h4 aria-level="3">Keep it lean</h4><ul><li>CLAUDE.md under ~200 lines</li><li>Few MCP servers and plugins</li><li>Deny reads of build output, deps, data</li><li>Skills over giant prompts</li></ul></div>
         <div class="sheet"><h4 aria-level="3">Signs you're too deep</h4><ul><li>Claude forgets rules from CLAUDE.md</li><li>Repeats a mistake you already corrected</li><li>Answers get slower and vaguer</li><li>Auto-compact fires</li></ul></div>
       </div>
@@ -2156,7 +2157,7 @@ Given our stack (@CLAUDE.md) and hosting (single Railway instance, may scale to 
       <div class="sheet-grid">
         <div class="sheet"><h4 aria-level="3">Use plan mode for</h4><ul><li>Changes across several files</li><li>Refactors and migrations</li><li>Unfamiliar parts of the codebase</li><li>Anything you can't describe in two sentences</li></ul></div>
         <div class="sheet"><h4 aria-level="3">A good plan lists</h4><ul><li>Files to change or create</li><li>Order of work, tests green at each step</li><li>Data model and API changes</li><li>Risks and open questions</li><li>How each acceptance criterion is verified</li></ul></div>
-        <div class="sheet"><h4 aria-level="3">Tuning</h4><ul><li><code>/model</code> Opus for hard plans</li><li>Thinking on (<code>/config</code>)</li><li><code>/effort</code> medium to high</li><li><code>/ultraplan</code> when regular plans are shallow</li></ul></div>
+        <div class="sheet"><h4 aria-level="3">Tuning</h4><ul><li><code>/model</code> Opus for hard plans</li><li>Thinking on (<code>/config</code>)</li><li><code>/effort</code> medium to high</li><li>Stronger model when plans stay shallow</li></ul></div>
         <div class="sheet"><h4 aria-level="3">After the plan</h4><ul><li>Save it to a file</li><li>Review it (or get a second opinion)</li><li>Implement in a fresh session from the file</li></ul></div>
       </div>
     </section>
@@ -2283,13 +2284,13 @@ Given our stack (@CLAUDE.md) and hosting (single Railway instance, may scale to 
     'how-it-works':['The model thinks. The harness reads files, runs tools and asks permission.','One prompt runs many loop turns, and every turn costs tokens.','Allow safe commands. Deny secrets and destructive ones.'],
     'sessions':['One feature per session, renamed right away.','Resume with claude -c or claude -r instead of re-explaining.','Side questions go in /btw. Plan with Opus, build with Sonnet.'],
     'prompting':['Name files with @ so Claude doesn\'t have to search.','Add a scope fence: "don\'t change anything else."','Paste images for UI work, and commit after each change that works.'],
-    'context':['The whole conversation is re-sent on every turn.','Only about 150K of the 200K window is really yours.','Compact on purpose around 60–70%, or hand off to a fresh session.'],
+    'context':['The whole conversation is re-sent on every turn.','Part of the window is used before you type. Check /context.','Compact on purpose between steps, or hand off to a fresh session.'],
     'claude-md':['Run /init, then add what only you know: constraints, workflow, "never do".','Keep it under ~200 lines. Split into rules/ or imports as it grows.','When Claude repeats a mistake, turn the fix into a CLAUDE.md rule.'],
     'spec':['A spec says what and why. The plan says how.','Review the spec before any code exists.','Finish by checking every acceptance criterion.'],
-    'plan-mode':['Shift+Tab into plan mode before any multi-file change.','Use Opus, thinking on, and medium to high effort for hard plans.','Save the plan to a file and implement from it in a fresh session.'],
+    'plan-mode':['Shift+Tab into plan mode before any multi-file change.','Use a strong model and medium to high effort for hard plans.','Save the plan to a file and implement from it in a fresh session.'],
     'commands-skills':['Typed the same prompt twice? Make it a command.','Skills load only when their description matches the task.','Add disable-model-invocation: true for skills you run on demand.'],
     'subagents':['Subagents read in their own window and return only a summary.','The agent that wrote the code shouldn\'t review it.','Run agents in parallel only when they touch different files.'],
-    'mcp':['MCP connects Claude to GitHub, databases, Figma, Jira and more.','Use least-privilege tokens, and never paste them into prompts.','Every server costs context. Keep only the ones you use weekly.'],
+    'mcp':['MCP connects Claude to GitHub, databases, Figma, Jira and more.','Use least-privilege tokens, and never paste them into prompts.','Keep only the servers you use: each one is code you trust with access.'],
     'hooks':['Hooks run every time. CLAUDE.md rules run most of the time.','PreToolUse plus exit code 2 blocks an action.','Format and lint on PostToolUse. Notify yourself on Stop.'],
     'plugins':['A plugin bundles skills, commands, agents, hooks and MCP servers.','A marketplace is a Git repo with a marketplace.json.','Install only the plugins you will actually use.'],
     'tokens':['Name files, paste only the relevant slice, ask for short output.','Plan first, split big work, hand off with a summary.','Trim MCP, plugins and CLAUDE.md. Send exploration to subagents.'],
@@ -2308,7 +2309,7 @@ Given our stack (@CLAUDE.md) and hosting (single Railway instance, may scale to 
     'When Claude repeats a mistake, say "add this rule to CLAUDE.md" so it sticks for every session.',
     'Ask for a failing test before a bug fix. It proves the bug and guards against regressions.',
     'Pipe test output through tail: ! pytest -q | tail -40. Claude only needs the failures.',
-    'Remove MCP servers you haven\'t used this week. Each one costs context in every session.',
+    'Remove MCP servers you no longer use. Each one is third-party code with access to your data.',
     'Let a different agent review the code. The writer carries its own blind spots.',
     'Deny reads of .env, node_modules and build output in .claude/settings.json.',
     'End long sessions with a handoff note, then start fresh from it. Quality comes right back.',
@@ -2662,25 +2663,23 @@ Given our stack (@CLAUDE.md) and hosting (single Railway instance, may scale to 
     ['/btw <question>','Ask a side question that is not added to the conversation','Session'],
     ['/export <file>','Save the conversation to a file','Session'],
     ['/rewind','Go back to an earlier point (conversation, code, or both)','Session'],
-    ['/clear','Wipe the conversation and start fresh','Context'],
+    ['/clear','Start a new conversation with empty context','Context'],
     ['/compact [focus]','Summarize the conversation to free context, keeping what you name','Context'],
     ['/context','See what is using the context window','Context'],
     ['/init','Generate a starter CLAUDE.md from the codebase','Context'],
     ['/memory','Open project, user or auto memory files','Context'],
-    ['/model','Switch between Opus, Sonnet and Haiku','Model & cost'],
-    ['/effort','Set thinking effort: low, medium, high, xhigh, max (depends on the model)','Model & cost'],
-    ['/usage','Plan usage for the current session window and the week','Model & cost'],
-    ['/cost','Token spend for this session (API billing)','Model & cost'],
-    ['/extra-usage','Top up when you hit your plan limit','Model & cost'],
-    ['/stats','Your usage statistics: tokens, models, sessions, streaks','Model & cost'],
+    ['/model','Switch between Fable, Opus, Sonnet and Haiku','Model & cost'],
+    ['/effort','Set thinking effort: low, medium, high, xhigh, max or auto (depends on the model)','Model & cost'],
+    ['/usage','Session cost, plan usage limits and activity stats','Model & cost'],
+    ['/cost · /stats','Aliases for /usage','Model & cost'],
+    ['/usage-credits','Set up usage credits to keep working past your plan limit','Model & cost'],
     ['/insights','HTML report on how you use Claude Code and how to improve','Model & cost'],
     ['/plan','Enter plan mode (read-only research and planning)','Workflow'],
-    ['/ultraplan <task>','Plan in the cloud with a web editor, then send back to the terminal','Workflow'],
     ['/security-review','Review pending changes for security issues','Workflow'],
-    ['/agents','List, create and edit subagents','Extend'],
+    ['/agents','Reminds you to ask Claude or edit .claude/agents/ to manage subagents','Extend'],
     ['/mcp','MCP server status, auth, reconnect, view tools','Extend'],
     ['/plugin','Discover and install plugins, manage marketplaces','Extend'],
-    ['/hooks','View and configure hooks','Extend'],
+    ['/hooks','View configured hooks (read-only; edit settings to change them)','Extend'],
     ['/add-dir <path>','Give Claude access to another folder','Extend'],
     ['/config','Settings: thinking mode, verbose, theme and more','Config'],
     ['/permissions','Allow, ask or deny tools and commands','Config'],
@@ -2717,9 +2716,8 @@ Given our stack (@CLAUDE.md) and hosting (single Railway instance, may scale to 
     const conv = +$('#ctxConv').value, mcp = +$('#ctxMcp').value;
     const fixed = [['System prompt', 6.3, '--s1'], ['Built-in tools', 8.3, '--s2'], ['MCP tools', mcp, '--s3'], ['CLAUDE.md + memory + skills', 3.0, '--s4']];
     const fixedSum = fixed.reduce((a, b) => a + b[1], 0);
-    const buffer = 33;
-    const c = Math.min(conv, Math.max(0, 200 - buffer - fixedSum));
-    const segs = [...fixed, ['Conversation', c, '--s5'], ['Auto-compact buffer', buffer, '--s6']];
+    const c = Math.min(conv, Math.max(0, 200 - fixedSum));
+    const segs = [...fixed, ['Conversation', c, '--s5']];
     const used = segs.reduce((a, b) => a + b[1], 0);
     const free = Math.max(0, 200 - used);
     $('#ctxBar').innerHTML = segs.map(s => '<div title="' + s[0] + ': ' + s[1].toFixed(1) + 'K" style="width:' + (s[1] / 2) + '%;background:var(' + s[2] + ')"></div>').join('');
@@ -2727,7 +2725,7 @@ Given our stack (@CLAUDE.md) and hosting (single Railway instance, may scale to 
       '<span><i style="background:var(--surface-2);border:1px solid var(--line)"></i>Free · ' + Math.round(free) + 'K</span>';
     $('#ctxConvOut').textContent = Math.round(c) + 'K';
     $('#ctxMcpOut').textContent = mcp + 'K';
-    const usable = 200 - buffer - fixedSum;
+    const usable = 200 - fixedSum;
     const pct = Math.round((c / usable) * 100);
     let pill;
     if (pct < 50) pill = '<span class="pill ok">Plenty of room</span>Keep working.';
@@ -2750,7 +2748,7 @@ Given our stack (@CLAUDE.md) and hosting (single Railway instance, may scale to 
     $('#cOne').textContent = fmt(sumOne); $('#cSplit').textContent = fmt(sumSplit);
     $('#cRatio').textContent = (sumOne / sumSplit).toFixed(1) + '×';
     const W = 640, H = 230, L = 52, R = 12, Tp = 14, B = 30;
-    const yMaxRaw = Math.max(one[N - 1], 160000), step = niceStep(yMaxRaw), yMax = Math.ceil(yMaxRaw / step) * step;
+    const yMaxRaw = Math.max(one[N - 1], 210000), step = niceStep(yMaxRaw), yMax = Math.ceil(yMaxRaw / step) * step;
     const x = i => L + (i / Math.max(N - 1, 1)) * (W - L - R);
     const y = v => Tp + (1 - v / yMax) * (H - Tp - B);
     const mono = 'font-size="11" font-family="JetBrains Mono, monospace"';
@@ -2763,8 +2761,8 @@ Given our stack (@CLAUDE.md) and hosting (single Railway instance, may scale to 
       const pts = arr.map((v, i) => x(i).toFixed(1) + ',' + y(v).toFixed(1)).join(' ');
       return '<polygon points="' + x(0) + ',' + y(0) + ' ' + pts + ' ' + x(arr.length - 1) + ',' + y(0) + '" fill="' + col + '" fill-opacity="0.14"/><polyline points="' + pts + '" fill="none" stroke="' + col + '" stroke-width="2.2" stroke-linejoin="round"/>';
     };
-    const lim = 150000;
-    const limLine = '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + y(lim) + '" y2="' + y(lim) + '" stroke="' + css('--amber') + '" stroke-width="1.5" stroke-dasharray="5 4"/><text x="' + (W - R - 4) + '" y="' + (y(lim) - 6) + '" text-anchor="end" ' + mono + ' fill="' + css('--amber') + '">~150K usable</text>';
+    const lim = 200000;
+    const limLine = '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + y(lim) + '" y2="' + y(lim) + '" stroke="' + css('--amber') + '" stroke-width="1.5" stroke-dasharray="5 4"/><text x="' + (W - R - 4) + '" y="' + (y(lim) - 6) + '" text-anchor="end" ' + mono + ' fill="' + css('--amber') + '">200K window (older models)</text>';
     let xt = '';
     const tickEvery = N <= 20 ? 5 : N <= 60 ? 10 : 20;
     for (let i = 0; i < N; i++) if ((i + 1) % tickEvery === 0 || i === 0) xt += '<text x="' + x(i) + '" y="' + (H - 10) + '" text-anchor="middle" ' + mono + ' fill="' + css('--muted') + '">' + (i + 1) + '</text>';
